@@ -20,7 +20,7 @@ public class ArrayStorage {
      * @param r resume for add.
      */
     void save(Resume r) {
-        if (get(r.uuid) == null) {
+        if (getIndex(r.uuid) < 0) {
             lastIndex++;
             storage[lastIndex] = r;
         }
@@ -35,9 +35,8 @@ public class ArrayStorage {
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
             return storage[findIndex];
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -57,7 +56,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(storage, size());
+        return Arrays.copyOf(storage, lastIndex + 1);
     }
 
     /**
@@ -74,13 +73,11 @@ public class ArrayStorage {
      * @return index of uuid
      */
     private int getIndex(String uuid) {
-        int result = -1;
         for (int i = 0; i <= lastIndex; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                result = i;
-                break;
+                return i;
             }
         }
-        return result;
+        return -1;
     }
 }
