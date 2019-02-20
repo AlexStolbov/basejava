@@ -5,9 +5,14 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
+    /**
+     * Index of last resume.
+     */
+    private int lastIndex = -1;
 
     void clear() {
-        Arrays.fill(this.storage, null);
+        Arrays.fill(storage, 0, lastIndex, null);
+        lastIndex = -1;
     }
 
     /**
@@ -16,7 +21,8 @@ public class ArrayStorage {
      */
     void save(Resume r) {
         if (get(r.uuid) == null) {
-            this.storage[size()] = r;
+            lastIndex++;
+            storage[lastIndex] = r;
         }
     }
 
@@ -26,12 +32,12 @@ public class ArrayStorage {
      * @return resume or null
      */
     Resume get(String uuid) {
-        Resume result = null;
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
-            result = this.storage[findIndex];
+            return storage[findIndex];
+        } else {
+            return null;
         }
-        return result;
     }
 
     /**
@@ -41,10 +47,9 @@ public class ArrayStorage {
     void delete(String uuid) {
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
-            int size = size();
-            this.storage[findIndex] = null;
-
-            System.arraycopy(this.storage, findIndex + 1, this.storage, findIndex, size - findIndex);
+            System.arraycopy(storage, findIndex + 1, storage, findIndex, lastIndex - findIndex);
+            storage[lastIndex] = null;
+            lastIndex--;
         }
     }
 
@@ -52,22 +57,15 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.stream(this.storage).limit(size()).toArray(Resume[]::new);
+        return Arrays.copyOf(storage, size());
     }
 
     /**
-     * The size of the storage without empty items.
-     * @return size
+     * The lastIndex of the storage without empty items.
+     * @return lastIndex
      */
     int size() {
-        int result = 0;
-        for (int i = 0; i < this.storage.length; i++) {
-            if (this.storage[i] == null) {
-                result = i;
-                break;
-            }
-        }
-        return result;
+        return lastIndex + 1;
     }
 
     /**
@@ -77,8 +75,8 @@ public class ArrayStorage {
      */
     private int getIndex(String uuid) {
         int result = -1;
-        for (int i = 0; i < size(); i++) {
-            if (this.storage[i].uuid.equals(uuid)) {
+        for (int i = 0; i <= lastIndex; i++) {
+            if (storage[i].uuid.equals(uuid)) {
                 result = i;
                 break;
             }
