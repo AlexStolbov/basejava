@@ -1,3 +1,5 @@
+package com.amstolbov.model;
+
 /**
  * Initial resume class
  */
@@ -7,16 +9,16 @@ public class Resume {
     String uuid;
     private String name;
 
-    public Resume() {
-
-    }
-
     public Resume(String newUUID) {
         uuid = newUUID;
     }
 
     @Override
     public String toString() {
+        return uuid;
+    }
+
+    public String getUuid() {
         return uuid;
     }
 

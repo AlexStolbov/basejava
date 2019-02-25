@@ -1,3 +1,6 @@
+package com.amstolbov.storage;
+
+import com.amstolbov.model.Resume;
 import java.util.Arrays;
 
 /**
@@ -10,6 +13,9 @@ public class ArrayStorage {
      */
     private int lastIndex = -1;
 
+    /**
+     * Clear storage.
+     */
     public void clear() {
         Arrays.fill(storage, 0, lastIndex, null);
         lastIndex = -1;
@@ -26,11 +32,11 @@ public class ArrayStorage {
             System.out.println("ERROR save: storage is full");
             return;
         }
-        if (r.uuid == null) {
+        if (r.getUuid() == null) {
             System.out.println("ERROR save: uuid is null");
             return;
         }
-        if (getIndex(r.uuid) < 0) {
+        if (getIndex(r.getUuid()) < 0) {
             lastIndex++;
             storage[lastIndex] = r;
         }
@@ -82,11 +88,11 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        int findIndex = getIndex(r.uuid);
+        int findIndex = getIndex(r.getUuid());
         if (findIndex > -1) {
             storage[findIndex] = r;
         } else {
-            System.out.printf("ERROR update: uuid - %s not find in storage", r.uuid);
+            System.out.printf("ERROR update: uuid - %s not find in storage", r.getUuid());
         }
     }
 
@@ -97,7 +103,7 @@ public class ArrayStorage {
      */
     private int getIndex(String uuid) {
         for (int i = 0; i <= lastIndex; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
