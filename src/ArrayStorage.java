@@ -10,16 +10,26 @@ public class ArrayStorage {
      */
     private int lastIndex = -1;
 
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, lastIndex, null);
         lastIndex = -1;
     }
 
     /**
-     * Adds the specified item to the repository..
+     * Adds the specified item to the repository.
+     * Check that repository is full.
+     * Verifies that uuid is corrert.
      * @param r resume for add.
      */
-    void save(Resume r) {
+    public void save(Resume r) {
+        if (lastIndex == storage.length - 1) {
+            System.out.println("ERROR save: storage is full");
+            return;
+        }
+        if (r.uuid == null) {
+            System.out.println("ERROR save: uuid is null");
+            return;
+        }
         if (getIndex(r.uuid) < 0) {
             lastIndex++;
             storage[lastIndex] = r;
@@ -31,10 +41,12 @@ public class ArrayStorage {
      * @param uuid search identifier.
      * @return resume or null
      */
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
             return storage[findIndex];
+        } else {
+            System.out.printf("ERROR get: uuid - %s not in storage \n", uuid);
         }
         return null;
     }
@@ -43,19 +55,21 @@ public class ArrayStorage {
      * Removes the element with the given uuid, if it exists. And compresses the storage.
      * @param uuid - uuid of the item to remove.
      */
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
             System.arraycopy(storage, findIndex + 1, storage, findIndex, lastIndex - findIndex);
             storage[lastIndex] = null;
             lastIndex--;
+        } else {
+            System.out.println("ERROR delete: uuid - %s not find in storage");
         }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, lastIndex + 1);
     }
 
@@ -63,8 +77,17 @@ public class ArrayStorage {
      * The lastIndex of the storage without empty items.
      * @return lastIndex
      */
-    int size() {
+    public int size() {
         return lastIndex + 1;
+    }
+
+    public void update(Resume r) {
+        int findIndex = getIndex(r.uuid);
+        if (findIndex > -1) {
+            storage[findIndex] = r;
+        } else {
+            System.out.printf("ERROR update: uuid - %s not find in storage", r.uuid);
+        }
     }
 
     /**
