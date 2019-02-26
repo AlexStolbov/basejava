@@ -5,12 +5,11 @@ import com.amstolbov.storage.ArrayStorage;
  * Test for your com.amstolbov.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    static final private ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume("uuid1");
         Resume r2 = new Resume("uuid2");
-        r2.setName("Resume 2");
         Resume r3 = new Resume("uuid3");
 
         ARRAY_STORAGE.save(r1);
@@ -22,10 +21,10 @@ public class MainTestArrayStorage {
 
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
-        System.out.printf("Name r2: %s \n", ARRAY_STORAGE.get(r2.getUuid()).getName());
-        r2.setName("Resume 2. v2.");
-        ARRAY_STORAGE.update(r2);
-        System.out.printf("New name r2: %s \n", ARRAY_STORAGE.get(r2.getUuid()).getName());
+        Resume r4 = new Resume("uuid2");
+        ARRAY_STORAGE.update(r4);
+        System.out.printf("Update uuid2: %s and %s\n", ARRAY_STORAGE.get(r4.getUuid()) != r2,
+                            ARRAY_STORAGE.get(r4.getUuid()) == r4);
 
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
@@ -43,7 +42,7 @@ public class MainTestArrayStorage {
 
     }
 
-    static void printAll() {
+    private static void printAll() {
         System.out.println("\nGet All");
         for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);
