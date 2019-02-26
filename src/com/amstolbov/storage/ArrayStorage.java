@@ -37,8 +37,8 @@ public class ArrayStorage {
             return storage[findIndex];
         } else {
             System.out.printf("ERROR get: uuid - %s not in storage \n", uuid);
+            return null;
         }
-        return null;
     }
 
     public void delete(String uuid) {
