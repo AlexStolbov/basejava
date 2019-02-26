@@ -7,10 +7,9 @@ public class Resume {
 
     // Unique identifier
     private String uuid;
-    private String name;
 
-    public Resume(String newUUID) {
-        uuid = newUUID;
+    public void setUuid(String newUuid) {
+        uuid = newUuid;
     }
 
     public String getUuid() {

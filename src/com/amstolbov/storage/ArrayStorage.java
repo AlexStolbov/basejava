@@ -27,8 +27,8 @@ public class ArrayStorage {
             System.out.println("ERROR save: uuid is present in storage");
             return;
         }
+        storage[size] = resume;
         size++;
-        storage[size - 1] = resume;
     }
 
     public Resume get(String uuid) {
