@@ -22,10 +22,13 @@ public class ArrayStorage {
             System.out.println("ERROR save: uuid is null");
             return;
         }
-        if (getIndex(r.getUuid()) < 0) {
-            size++;
-            storage[size - 1] = r;
+        int findIndex = getIndex(r.getUuid());
+        if (findIndex > -1) {
+            System.out.println("ERROR save: uuid is present in storage");
+            return;
         }
+        size++;
+        storage[size - 1] = r;
     }
 
     public Resume get(String uuid) {
