@@ -39,7 +39,7 @@ public class MainTestArrayStorage {
         }
         System.out.println("Size: " + ARRAY_STORAGE.size());
         ARRAY_STORAGE.save(new Resume("10001"));
-
+        ARRAY_STORAGE.clear();
     }
 
     private static void printAll() {
