@@ -6,15 +6,15 @@ import java.util.Arrays;
 
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
-    private int lastIndex = -1;
+    private int size = 0;
 
     public void clear() {
-        Arrays.fill(storage, 0, lastIndex, null);
-        lastIndex = -1;
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     public void save(Resume r) {
-        if (lastIndex == storage.length - 1) {
+        if (size == storage.length) {
             System.out.println("ERROR save: storage is full");
             return;
         }
@@ -23,8 +23,8 @@ public class ArrayStorage {
             return;
         }
         if (getIndex(r.getUuid()) < 0) {
-            lastIndex++;
-            storage[lastIndex] = r;
+            size++;
+            storage[size - 1] = r;
         }
     }
 
@@ -41,20 +41,20 @@ public class ArrayStorage {
     public void delete(String uuid) {
         int findIndex = getIndex(uuid);
         if (findIndex > -1) {
-            System.arraycopy(storage, findIndex + 1, storage, findIndex, lastIndex - findIndex);
-            storage[lastIndex] = null;
-            lastIndex--;
+            System.arraycopy(storage, findIndex + 1, storage, findIndex, size - findIndex);
+            storage[size - 1] = null;
+            size--;
         } else {
             System.out.println("ERROR delete: uuid - %s not find in storage");
         }
     }
 
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, lastIndex + 1);
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
-        return lastIndex + 1;
+        return size;
     }
 
     public void update(Resume r) {
@@ -67,7 +67,7 @@ public class ArrayStorage {
     }
 
     private int getIndex(String uuid) {
-        for (int i = 0; i <= lastIndex; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
