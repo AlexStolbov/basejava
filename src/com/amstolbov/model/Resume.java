@@ -17,14 +17,6 @@ public class Resume {
         return uuid;
     }
 
-    public void setName(String newName) {
-        name = newName;
-    }
-
-    public String getName(){
-        return name;
-    }
-
     @Override
     public String toString() {
         return uuid;
