@@ -13,22 +13,22 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void save(Resume r) {
+    public void save(Resume resume) {
         if (size == storage.length) {
             System.out.println("ERROR save: storage is full");
             return;
         }
-        if (r.getUuid() == null) {
+        if (resume.getUuid() == null) {
             System.out.println("ERROR save: uuid is null");
             return;
         }
-        int findIndex = getIndex(r.getUuid());
+        int findIndex = getIndex(resume.getUuid());
         if (findIndex > -1) {
             System.out.println("ERROR save: uuid is present in storage");
             return;
         }
         size++;
-        storage[size - 1] = r;
+        storage[size - 1] = resume;
     }
 
     public Resume get(String uuid) {
@@ -60,12 +60,12 @@ public class ArrayStorage {
         return size;
     }
 
-    public void update(Resume r) {
-        int findIndex = getIndex(r.getUuid());
+    public void update(Resume resume) {
+        int findIndex = getIndex(resume.getUuid());
         if (findIndex > -1) {
-            storage[findIndex] = r;
+            storage[findIndex] = resume;
         } else {
-            System.out.printf("ERROR update: uuid - %s not find in storage", r.getUuid());
+            System.out.printf("ERROR update: uuid - %s not find in storage", resume.getUuid());
         }
     }
 
