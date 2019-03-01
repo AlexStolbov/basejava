@@ -9,20 +9,23 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    @Override
     public void update(Resume resume) {
         int findIndex = getIndex(resume.getUuid());
-        if (findIndex == -1) {
+        if (findIndex < 0) {
             System.out.printf("ERROR update: uuid - %s not find in storage", resume.getUuid());
         } else {
             storage[findIndex] = resume;
         }
     }
 
+    @Override
     public void save(Resume resume) {
         int findIndex = getIndex(resume.getUuid());
         if (findIndex > 0) {
@@ -36,10 +39,12 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
@@ -49,9 +54,10 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
+    @Override
     public void delete(String uuid) {
         int findIndex = getIndex(uuid);
-        if (findIndex == -1) {
+        if (findIndex < 0) {
             System.out.println("ERROR delete: uuid - %s not find in storage");
         } else {
             deleteElement(findIndex);
@@ -60,6 +66,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }

@@ -8,7 +8,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void deleteElement(int findIndex) {
-        if (findIndex + 1 < size) {
+        if (findIndex < size - 1) {
             System.arraycopy(storage, findIndex + 1, storage, findIndex, size - findIndex - 1);
         }
     }
@@ -25,8 +25,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             int insertIndex = -findIndex - 1;
             if (insertIndex != size) {
                 System.arraycopy(storage, insertIndex, storage, insertIndex + 1, size - insertIndex);
-            } else {
-                insertIndex = size;
             }
             return insertIndex;
         }
