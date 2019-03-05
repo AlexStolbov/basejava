@@ -1,5 +1,8 @@
 package com.amstolbov.storage;
 
+import com.amstolbov.exception.ExistStorageException;
+import com.amstolbov.exception.NotExistStorageException;
+import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;
 
 import java.util.Arrays;
@@ -19,7 +22,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume resume) {
         int findIndex = getIndex(resume.getUuid());
         if (findIndex < 0) {
-            System.out.printf("ERROR update: uuid - %s not find in storage", resume.getUuid());
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[findIndex] = resume;
         }
@@ -29,9 +32,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         int findIndex = getIndex(resume.getUuid());
         if (findIndex > 0) {
-            System.out.println("ERROR save: uuid is present in storage");
+            throw new ExistStorageException(resume.getUuid());
         } else if (size >= STORAGE_LIMIT) {
-            System.out.println("ERROR save: storage is full");
+            throw new StorageException("Storage overflow", resume.getUuid());
         } else {
             int saveIndex = getSaveIndex(findIndex);
             storage[saveIndex] = resume;
@@ -48,8 +51,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.printf("Resume %s not exist \n", uuid);
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -58,7 +60,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int findIndex = getIndex(uuid);
         if (findIndex < 0) {
-            System.out.println("ERROR delete: uuid - %s not find in storage");
+            throw new NotExistStorageException(uuid);
         } else {
             deleteElement(findIndex);
             storage[size - 1] = null;
