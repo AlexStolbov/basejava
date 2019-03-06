@@ -73,10 +73,6 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    public int getStorageLimit() {
-        return STORAGE_LIMIT;
-    }
-
     protected abstract int getIndex(String uuid);
 
     protected abstract int getSaveIndex(int findIndex);
