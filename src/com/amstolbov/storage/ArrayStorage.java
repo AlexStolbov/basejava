@@ -1,9 +1,11 @@
 package com.amstolbov.storage;
 
-public class ArrayStorage extends AbstractArrayStorage{
+import com.amstolbov.model.Resume;
+
+public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int getIndex(String uuid) {
+    protected int getExistPosition(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -13,12 +15,12 @@ public class ArrayStorage extends AbstractArrayStorage{
     }
 
     @Override
-    protected int getSaveIndex(int findIndex) {
+    protected int getSaveIndex(Resume resume) {
         return size;
     }
 
     @Override
-    protected void deleteElement(int findIndex) {
+    protected void deleteArrayElement(int findIndex) {
         storage[findIndex] = storage[size - 1];
     }
 }

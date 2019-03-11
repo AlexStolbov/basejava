@@ -30,7 +30,7 @@ public class MainTestArrayStorage {
         Resume r5 = new Resume("uuid2");
         ARRAY_STORAGE.update(r5);
         System.out.printf("Update uuid2: %s and %s\n", ARRAY_STORAGE.get(r5.getUuid()) != r2,
-                            ARRAY_STORAGE.get(r5.getUuid()) == r5);
+                ARRAY_STORAGE.get(r5.getUuid()) == r5);
 
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
