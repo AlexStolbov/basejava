@@ -10,7 +10,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[size]);
+        return storage.toArray(new Resume[storage.size()]);
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
     }
 
     @Override
@@ -24,7 +29,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveElement(Resume resume) {
+    protected void saveElement(Resume resume, int existPosition) {
         storage.add(resume);
     }
 
@@ -40,7 +45,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getExistPosition(String uuid) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }

@@ -6,12 +6,9 @@ import com.amstolbov.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected int size = 0;
-
     @Override
     public void clear() {
         clearStorage();
-        size = 0;
     }
 
     @Override
@@ -22,11 +19,11 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        if (getExistPosition(resume.getUuid()) > -1) {
+        int existPosition = getExistPosition(resume.getUuid());
+        if (existPosition > -1) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            saveElement(resume);
-            size++;
+            saveElement(resume, existPosition);
         }
     }
 
@@ -40,19 +37,13 @@ public abstract class AbstractStorage implements Storage {
     public void delete(String uuid) {
         int existPosition = checkForExistElement(uuid);
         deleteElement(existPosition);
-        size--;
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 
     protected abstract void clearStorage();
 
     protected abstract void updateElement(int existPosition, Resume resume);
 
-    protected abstract void saveElement(Resume resume);
+    protected abstract void saveElement(Resume resume, int existPosition);
 
     protected abstract Resume getElement(int existPosition);
 

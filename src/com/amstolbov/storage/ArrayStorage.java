@@ -1,7 +1,5 @@
 package com.amstolbov.storage;
 
-import com.amstolbov.model.Resume;
-
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -15,7 +13,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected int getSaveIndex(Resume resume) {
+    protected int getSaveIndex(int existPosition) {
         return size;
     }
 
