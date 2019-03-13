@@ -6,6 +6,8 @@ import com.amstolbov.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class AbstractStorageTest {
@@ -98,6 +100,8 @@ public class AbstractStorageTest {
     public void getAll() {
         Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         Resume[] storageAll = storage.getAll();
+        Arrays.sort(expected);
+        Arrays.sort(storageAll);
         assertArrayEquals(expected, storageAll);
     }
 

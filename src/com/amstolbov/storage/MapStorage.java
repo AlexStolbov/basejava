@@ -2,15 +2,15 @@ package com.amstolbov.storage;
 
 import com.amstolbov.model.Resume;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListStorage extends AbstractStorage {
-    protected final List<Resume> storage = new LinkedList<>();
+public class MapStorage extends AbstractStorage {
+    protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+        return storage.values().toArray(new Resume[]{});
     }
 
     @Override
@@ -25,33 +25,31 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void updateElement(ExistPosition existPosition, Resume resume) {
-        storage.set(existPosition.intPos, resume);
+        storage.put(existPosition.strPos, resume);
     }
 
     @Override
     protected void saveElement(Resume resume, ExistPosition existPosition) {
-        storage.add(resume);
+        storage.put(existPosition.strPos, resume);
     }
 
     @Override
     protected Resume getElement(ExistPosition existPosition) {
-        return storage.get(existPosition.intPos);
+        return storage.get(existPosition.strPos);
     }
 
     @Override
     protected void deleteElement(ExistPosition existElement) {
-        storage.remove(existElement.intPos);
+        storage.remove(existElement.strPos);
     }
 
     @Override
     protected ExistPosition getExistPosition(String uuid) {
-        int result = -1;
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                result = i;
-                break;
-            }
+        ExistPosition result = new ExistPosition(false, 0, uuid);
+        if (storage.containsKey(uuid)) {
+            result.strPos = uuid;
+            result.exist = true;
         }
-        return new ExistPosition((result >= 0), result, "");
+        return result;
     }
 }

@@ -3,13 +3,15 @@ package com.amstolbov.storage;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int getExistPosition(String uuid) {
+    protected ExistPosition getExistPosition(String uuid) {
+        int result = -1;
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return i;
+                result = i;
+                break;
             }
         }
-        return -1;
+        return new ExistPosition((result >= 0), result, "");
     }
 
     @Override
