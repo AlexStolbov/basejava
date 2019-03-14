@@ -8,11 +8,11 @@ import java.util.Comparator;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected ExistPosition getExistPosition(String uuid) {
+    protected String getExistPosition(String uuid) {
         Resume searchKey = new Resume(uuid);
         Comparator<Resume> cc = Comparator.comparing(o1 -> o1.getUuid());
         int result = Arrays.binarySearch(storage, 0, size, searchKey, cc);
-        return new ExistPosition((result >= 0), result, "");
+        return String.valueOf(result);
     }
 
     @Override
@@ -30,4 +30,5 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             System.arraycopy(storage, findIndex + 1, storage, findIndex, size - findIndex - 1);
         }
     }
+
 }

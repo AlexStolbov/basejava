@@ -24,32 +24,31 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(ExistPosition existPosition, Resume resume) {
-        storage.put(existPosition.strPos, resume);
+    protected void updateElement(String existPosition, Resume resume) {
+        storage.put(existPosition, resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, ExistPosition existPosition) {
-        storage.put(existPosition.strPos, resume);
+    protected void saveElement(Resume resume, String existPosition) {
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getElement(ExistPosition existPosition) {
-        return storage.get(existPosition.strPos);
+    protected Resume getElement(String existPosition) {
+        return storage.get(existPosition);
     }
 
     @Override
-    protected void deleteElement(ExistPosition existElement) {
-        storage.remove(existElement.strPos);
+    protected void deleteElement(String existElement) {
+        storage.remove(existElement);
     }
 
     @Override
-    protected ExistPosition getExistPosition(String uuid) {
-        ExistPosition result = new ExistPosition(false, 0, uuid);
+    protected String getExistPosition(String uuid) {
         if (storage.containsKey(uuid)) {
-            result.strPos = uuid;
-            result.exist = true;
+            return uuid;
         }
-        return result;
+        return NOT_EXIST_INDEX_COLLECTION;
     }
+
 }
