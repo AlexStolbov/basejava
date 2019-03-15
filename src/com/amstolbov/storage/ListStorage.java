@@ -24,23 +24,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(String existPosition, Resume resume) {
-        storage.set(convertIndexFrom(existPosition), resume);
+    protected void updateElement(Object existPosition, Resume resume) {
+        storage.set((Integer) existPosition, resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, String existPosition) {
+    protected void saveElement(Resume resume, Object existPosition) {
         storage.add(resume);
     }
 
     @Override
-    protected Resume getElement(String existPosition) {
-        return storage.get(convertIndexFrom(existPosition));
+    protected Resume getElement(Object existPosition) {
+        return storage.get((Integer) existPosition);
     }
 
     @Override
-    protected void deleteElement(String existElement) {
-        storage.remove(convertIndexFrom(existElement));
+    protected void deleteElement(Object existPosition) {
+        storage.remove((Integer)existPosition);
     }
 
     @Override
@@ -51,10 +51,6 @@ public class ListStorage extends AbstractStorage {
             }
         }
         return NOT_EXIST_INDEX_COLLECTION;
-    }
-
-    private int convertIndexFrom(String index) {
-        return Integer.valueOf(index);
     }
 
 }

@@ -15,13 +15,13 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        String existPosition = checkForExistElement(resume.getUuid());
+        Object existPosition = checkForExistElement(resume.getUuid());
         updateElement(existPosition, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        String existPosition = getExistPosition(resume.getUuid());
+        Object existPosition = getExistPosition(resume.getUuid());
         if (elementExistInThisPosition(existPosition)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
@@ -31,34 +31,34 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        String existPosition = checkForExistElement(uuid);
+        Object existPosition = checkForExistElement(uuid);
         return getElement(existPosition);
     }
 
     @Override
     public void delete(String uuid) {
-        String existPosition = checkForExistElement(uuid);
+        Object existPosition = checkForExistElement(uuid);
         deleteElement(existPosition);
     }
 
     protected abstract void clearStorage();
 
-    protected abstract void updateElement(String existPosition, Resume resume);
+    protected abstract void updateElement(Object existPosition, Resume resume);
 
-    protected abstract void saveElement(Resume resume, String existPosition);
+    protected abstract void saveElement(Resume resume, Object existPosition);
 
-    protected abstract Resume getElement(String existPosition);
+    protected abstract Resume getElement(Object existPosition);
 
-    protected abstract void deleteElement(String existPosition);
+    protected abstract void deleteElement(Object existPosition);
 
-    protected abstract String getExistPosition(String uuid);
+    protected abstract Object getExistPosition(String uuid);
 
-    protected boolean elementExistInThisPosition(String existPosition) {
+    protected boolean elementExistInThisPosition(Object existPosition) {
         return !existPosition.equals(NOT_EXIST_INDEX_COLLECTION) ;
-    };
+    }
 
-    private String checkForExistElement(String uuid) {
-        String existPosition = getExistPosition(uuid);
+    private Object checkForExistElement(String uuid) {
+        Object existPosition = getExistPosition(uuid);
         if (!elementExistInThisPosition(existPosition)) {
             throw new NotExistStorageException(uuid);
         } else {

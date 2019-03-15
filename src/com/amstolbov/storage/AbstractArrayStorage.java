@@ -31,37 +31,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(String existPosition, Resume resume) {
-        storage[convertIndexFrom(existPosition)] = resume;
+    protected void updateElement(Object existPosition, Resume resume) {
+        storage[(Integer) existPosition] = resume;
     }
 
     @Override
-    protected void saveElement(Resume resume, String existPosition) {
+    protected void saveElement(Resume resume, Object existPosition) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        storage[getSaveIndex(convertIndexFrom(existPosition))] = resume;
+        storage[getSaveIndex((Integer) existPosition)] = resume;
         size++;
     }
 
     @Override
-    protected Resume getElement(String existPosition) {
-        return storage[convertIndexFrom(existPosition)];
+    protected Resume getElement(Object existPosition) {
+        return storage[(Integer)existPosition];
     }
 
     @Override
-    protected void deleteElement(String existPosition) {
-        deleteArrayElement(convertIndexFrom(existPosition));
+    protected void deleteElement(Object existPosition) {
+        deleteArrayElement((Integer) existPosition);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected boolean elementExistInThisPosition(String existPosition) {
-        return Integer.valueOf(existPosition) > -1;
+    protected boolean elementExistInThisPosition(Object existPosition) {
+        return (Integer) existPosition > -1;
     }
 
-    private int convertIndexFrom(String index) {
-        return Integer.valueOf(index);
-    }
 }

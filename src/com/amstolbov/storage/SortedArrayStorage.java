@@ -8,11 +8,11 @@ import java.util.Comparator;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected String getExistPosition(String uuid) {
+    protected Object getExistPosition(String uuid) {
         Resume searchKey = new Resume(uuid);
         Comparator<Resume> cc = Comparator.comparing(o1 -> o1.getUuid());
         int result = Arrays.binarySearch(storage, 0, size, searchKey, cc);
-        return String.valueOf(result);
+        return result;
     }
 
     @Override
