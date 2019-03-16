@@ -6,13 +6,6 @@ import com.amstolbov.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected final String NOT_EXIST_INDEX_COLLECTION = "";
-
-    @Override
-    public void clear() {
-        clearStorage();
-    }
-
     @Override
     public void update(Resume resume) {
         Object existPosition = checkForExistElement(resume.getUuid());
@@ -41,8 +34,6 @@ public abstract class AbstractStorage implements Storage {
         deleteElement(existPosition);
     }
 
-    protected abstract void clearStorage();
-
     protected abstract void updateElement(Object existPosition, Resume resume);
 
     protected abstract void saveElement(Resume resume, Object existPosition);
@@ -53,9 +44,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Object getExistPosition(String uuid);
 
-    protected boolean elementExistInThisPosition(Object existPosition) {
-        return !existPosition.equals(NOT_EXIST_INDEX_COLLECTION) ;
-    }
+    protected abstract boolean elementExistInThisPosition(Object existPosition);
 
     private Object checkForExistElement(String uuid) {
         Object existPosition = getExistPosition(uuid);

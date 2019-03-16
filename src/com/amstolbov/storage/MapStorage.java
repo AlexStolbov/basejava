@@ -19,13 +19,13 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void clearStorage() {
+    public void clear() {
         storage.clear();
     }
 
     @Override
     protected void updateElement(Object existPosition, Resume resume) {
-        storage.put((String)existPosition, resume);
+        storage.put((String) existPosition, resume);
     }
 
     @Override
@@ -45,10 +45,14 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected String getExistPosition(String uuid) {
-        if (storage.containsKey(uuid)) {
-            return uuid;
-        }
-        return NOT_EXIST_INDEX_COLLECTION;
+        return uuid;
     }
 
+    @Override
+    protected boolean elementExistInThisPosition(Object existPosition) {
+        if (storage.containsKey((String) existPosition)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -19,7 +19,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void clearStorage() {
+    public void clear() {
         storage.clear();
     }
 
@@ -40,17 +40,21 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void deleteElement(Object existPosition) {
-        storage.remove((Integer)existPosition);
+        storage.remove((int) existPosition);
     }
 
     @Override
-    protected String getExistPosition(String uuid) {
+    protected Object getExistPosition(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
-                return String.valueOf(i);
+                return i;
             }
         }
-        return NOT_EXIST_INDEX_COLLECTION;
+        return -1;
     }
 
+    @Override
+    protected boolean elementExistInThisPosition(Object existPosition) {
+        return (int) existPosition > -1;
+    }
 }
