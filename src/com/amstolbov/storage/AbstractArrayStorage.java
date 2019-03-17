@@ -22,8 +22,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract int getSaveIndex(int existPosition);
 
-    protected abstract void deleteArrayElement(int findIndex);
-
     @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -55,6 +53,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         storage[size - 1] = null;
         size--;
     }
+
+    protected abstract void deleteArrayElement(int findIndex);
 
     @Override
     protected boolean elementExistInThisPosition(Object existPosition) {

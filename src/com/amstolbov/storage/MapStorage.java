@@ -50,9 +50,6 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean elementExistInThisPosition(Object existPosition) {
-        if (storage.containsKey((String) existPosition)) {
-            return true;
-        }
-        return false;
+        return storage.containsKey((String) existPosition);
     }
 }
