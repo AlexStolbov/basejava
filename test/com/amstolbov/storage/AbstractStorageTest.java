@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class AbstractStorageTest {
@@ -18,10 +20,15 @@ public class AbstractStorageTest {
     protected static final String UUID_3 = "uuid3";
     protected static final String UUID_4 = "uuid4";
 
-    protected static final Resume RESUME_1 = new Resume(UUID_1);
-    protected static final Resume RESUME_2 = new Resume(UUID_2);
-    protected static final Resume RESUME_3 = new Resume(UUID_3);
-    protected static final Resume RESUME_4 = new Resume(UUID_4);
+    protected static final String FULL_NAME1 = "full name 1";
+    protected static final String FULL_NAME2 = "full name 2";
+    protected static final String FULL_NAME3 = "full name 3";
+    protected static final String FULL_NAME4 = "full name 4";
+
+    protected static final Resume RESUME_1 = new Resume(UUID_1, FULL_NAME1);
+    protected static final Resume RESUME_2 = new Resume(UUID_2, FULL_NAME2);
+    protected static final Resume RESUME_3 = new Resume(UUID_3, FULL_NAME3);
+    protected static final Resume RESUME_4 = new Resume(UUID_4, FULL_NAME4);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -97,12 +104,10 @@ public class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
-        Resume[] storageAll = storage.getAll();
-        Arrays.sort(expected);
-        Arrays.sort(storageAll);
-        assertArrayEquals(expected, storageAll);
+    public void getAllSorted() {
+        List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        List<Resume> storageAll = storage.getAllSorted();
+        assertThat(storageAll, is(expected));
     }
 
 }

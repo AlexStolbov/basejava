@@ -9,8 +9,9 @@ public class ListStorage extends AbstractStorage {
     protected final List<Resume> storage = new LinkedList<>();
 
     @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+    public List<Resume> getAllSorted() {
+        storage.sort(COMPARE_FULL_NAME);
+        return storage;
     }
 
     @Override

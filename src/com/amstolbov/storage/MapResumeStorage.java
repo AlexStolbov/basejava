@@ -4,12 +4,12 @@ import com.amstolbov.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
-    protected final Map<String, Resume> storage = new HashMap<>();
+public class MapResumeStorage extends AbstractStorage {
+    protected final Map<Resume, Resume> storage = new HashMap<>();
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(storage.values()) ;
+        List<Resume> result = new ArrayList<>(storage.values());
         result.sort(COMPARE_FULL_NAME);
         return result;
     }
@@ -26,12 +26,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void updateElement(Object existPosition, Resume resume) {
-        storage.put((String) existPosition, resume);
+        storage.put((Resume) existPosition, resume);
     }
 
     @Override
     protected void saveElement(Resume resume, Object existPosition) {
-        storage.put(resume.getUuid(), resume);
+        storage.put(resume, resume);
     }
 
     @Override
@@ -45,12 +45,17 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected String getExistPosition(String uuid) {
-        return uuid;
+    protected Resume getExistPosition(String uuid) {
+        Resume key = new Resume(uuid);
+        if (storage.containsKey(key)) {
+            return key;
+        } else {
+            return null;
+        }
     }
 
     @Override
     protected boolean elementExistInThisPosition(Object existPosition) {
-        return storage.containsKey((String) existPosition);
+        return existPosition != null;
     }
 }
