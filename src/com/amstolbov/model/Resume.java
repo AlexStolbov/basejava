@@ -1,5 +1,6 @@
 package com.amstolbov.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -9,18 +10,14 @@ public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
-    private String fullName = "";
+    private final String fullName;
 
-    public Resume() {
-        this(UUID.randomUUID().toString());
-    }
-
-    public Resume(String uuid) {
-        this.uuid = uuid;
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
-        this(uuid);
+        this.uuid = uuid;
         this.fullName = fullName;
     }
 
@@ -37,14 +34,14 @@ public class Resume implements Comparable<Resume> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid);
+        return uuid.equals(resume.uuid) &&
+                fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(uuid, fullName);
     }
-
 
     @Override
     public String toString() {

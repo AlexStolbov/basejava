@@ -10,7 +10,7 @@ public class MainReflection {
     public static void main(String[] args) throws IllegalAccessException,
                                                     NoSuchMethodException,
                                                     InvocationTargetException {
-        Resume r = new Resume();
+        Resume r = new Resume("Tom");
         Class classResume = r.getClass();
         Field field = classResume.getDeclaredFields()[0];
         field.setAccessible(true);

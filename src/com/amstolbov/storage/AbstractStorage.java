@@ -5,6 +5,7 @@ import com.amstolbov.exception.NotExistStorageException;
 import com.amstolbov.model.Resume;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
@@ -34,6 +35,13 @@ public abstract class AbstractStorage implements Storage {
         deleteElement(existPosition);
     }
 
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> result = getAllSortedCertainStorage();
+        result.sort(COMPARE_FULL_NAME);
+        return result;
+    }
+
     protected abstract void updateElement(Object existPosition, Resume resume);
 
     protected abstract void saveElement(Resume resume, Object existPosition);
@@ -45,6 +53,8 @@ public abstract class AbstractStorage implements Storage {
     protected abstract Object getExistPosition(String uuid);
 
     protected abstract boolean elementExistInThisPosition(Object existPosition);
+
+    protected abstract List<Resume> getAllSortedCertainStorage();
 
     private Object checkForExistElement(String uuid) {
         Object existPosition = getExistPosition(uuid);

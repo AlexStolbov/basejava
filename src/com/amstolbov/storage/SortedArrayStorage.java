@@ -3,15 +3,13 @@ package com.amstolbov.storage;
 import com.amstolbov.model.Resume;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Object getExistPosition(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        Comparator<Resume> cc = Comparator.comparing(Resume::getUuid);
-        int result = Arrays.binarySearch(storage, 0, size, searchKey, cc);
+        Resume searchKey = new Resume(uuid, "");
+        int result = Arrays.binarySearch(storage, 0, size, searchKey, (Resume::compareTo));
         return result;
     }
 

@@ -5,13 +5,11 @@ import com.amstolbov.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
-    protected final Map<Resume, Resume> storage = new HashMap<>();
+    protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(storage.values());
-        result.sort(COMPARE_FULL_NAME);
-        return result;
+    public List<Resume> getAllSortedCertainStorage() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -26,32 +24,27 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void updateElement(Object existPosition, Resume resume) {
-        storage.put((Resume) existPosition, resume);
+        storage.put(((Resume) existPosition).getUuid(), resume);
     }
 
     @Override
     protected void saveElement(Resume resume, Object existPosition) {
-        storage.put(resume, resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected Resume getElement(Object existPosition) {
-        return storage.get(existPosition);
+        return (Resume) existPosition;
     }
 
     @Override
     protected void deleteElement(Object existElement) {
-        storage.remove(existElement);
+        storage.remove(((Resume)existElement).getUuid());
     }
 
     @Override
     protected Resume getExistPosition(String uuid) {
-        Resume key = new Resume(uuid);
-        if (storage.containsKey(key)) {
-            return key;
-        } else {
-            return null;
-        }
+        return storage.get(uuid);
     }
 
     @Override

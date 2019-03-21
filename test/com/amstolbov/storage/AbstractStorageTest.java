@@ -15,20 +15,15 @@ import static org.junit.Assert.*;
 public class AbstractStorageTest {
     protected final Storage storage;
 
-    protected static final String UUID_1 = "uuid1";
-    protected static final String UUID_2 = "uuid2";
-    protected static final String UUID_3 = "uuid3";
-    protected static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
 
-    protected static final String FULL_NAME1 = "full name 1";
-    protected static final String FULL_NAME2 = "full name 2";
-    protected static final String FULL_NAME3 = "full name 3";
-    protected static final String FULL_NAME4 = "full name 4";
-
-    protected static final Resume RESUME_1 = new Resume(UUID_1, FULL_NAME1);
-    protected static final Resume RESUME_2 = new Resume(UUID_2, FULL_NAME2);
-    protected static final Resume RESUME_3 = new Resume(UUID_3, FULL_NAME3);
-    protected static final Resume RESUME_4 = new Resume(UUID_4, FULL_NAME4);
+    private static final Resume RESUME_1 = new Resume(UUID_1, "full name 1");
+    private static final Resume RESUME_2 = new Resume(UUID_2, "full name 2");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "full name 3");
+    private static final Resume RESUME_4 = new Resume(UUID_4, "full name 4");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -50,10 +45,10 @@ public class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updatedResume = new Resume(UUID_2);
+        Resume updatedResume = new Resume(UUID_2, "full name 5");
         assertNotSame(updatedResume, storage.get(UUID_2));
         storage.update(updatedResume);
-        assertSame(updatedResume, storage.get(UUID_2));
+        assertThat(storage.get(UUID_2), is(updatedResume));
     }
 
     @Test(expected = NotExistStorageException.class)
