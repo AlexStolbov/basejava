@@ -5,7 +5,7 @@ import com.amstolbov.model.Resume;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     protected final List<Resume> storage = new LinkedList<>();
 
     @Override
@@ -24,27 +24,27 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(Object existPosition, Resume resume) {
-        storage.set((Integer) existPosition, resume);
+    protected void updateElement(Integer existPosition, Resume resume) {
+        storage.set(existPosition, resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, Object existPosition) {
+    protected void saveElement(Resume resume, Integer existPosition) {
         storage.add(resume);
     }
 
     @Override
-    protected Resume getElement(Object existPosition) {
-        return storage.get((Integer) existPosition);
+    protected Resume getElement(Integer existPosition) {
+        return storage.get(existPosition);
     }
 
     @Override
-    protected void deleteElement(Object existPosition) {
+    protected void deleteElement(Integer existPosition) {
         storage.remove((int) existPosition);
     }
 
     @Override
-    protected Object getExistPosition(String uuid) {
+    protected Integer getExistPosition(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -54,7 +54,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean elementExistInThisPosition(Object existPosition) {
+    protected boolean elementExistInThisPosition(Integer existPosition) {
         return (int) existPosition > -1;
     }
 }

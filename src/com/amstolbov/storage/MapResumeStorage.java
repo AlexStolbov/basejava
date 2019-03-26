@@ -4,7 +4,7 @@ import com.amstolbov.model.Resume;
 
 import java.util.*;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
@@ -23,23 +23,23 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(Object existPosition, Resume resume) {
-        storage.put(((Resume) existPosition).getUuid(), resume);
+    protected void updateElement(Resume existPosition, Resume resume) {
+        storage.put(existPosition.getUuid(), resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, Object existPosition) {
+    protected void saveElement(Resume resume, Resume existPosition) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getElement(Object existPosition) {
-        return (Resume) existPosition;
+    protected Resume getElement(Resume existPosition) {
+        return existPosition;
     }
 
     @Override
-    protected void deleteElement(Object existElement) {
-        storage.remove(((Resume)existElement).getUuid());
+    protected void deleteElement(Resume existElement) {
+        storage.remove(existElement.getUuid());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean elementExistInThisPosition(Object existPosition) {
+    protected boolean elementExistInThisPosition(Resume existPosition) {
         return existPosition != null;
     }
 }

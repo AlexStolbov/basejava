@@ -6,7 +6,7 @@ import com.amstolbov.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -30,27 +30,27 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(Object existPosition, Resume resume) {
-        storage[(Integer) existPosition] = resume;
+    protected void updateElement(Integer existPosition, Resume resume) {
+        storage[existPosition] = resume;
     }
 
     @Override
-    protected void saveElement(Resume resume, Object existPosition) {
+    protected void saveElement(Resume resume, Integer existPosition) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        storage[getSaveIndex((Integer) existPosition)] = resume;
+        storage[getSaveIndex(existPosition)] = resume;
         size++;
     }
 
     @Override
-    protected Resume getElement(Object existPosition) {
-        return storage[(Integer) existPosition];
+    protected Resume getElement(Integer existPosition) {
+        return storage[existPosition];
     }
 
     @Override
-    protected void deleteElement(Object existPosition) {
-        deleteArrayElement((Integer) existPosition);
+    protected void deleteElement(Integer existPosition) {
+        deleteArrayElement(existPosition);
         storage[size - 1] = null;
         size--;
     }
@@ -58,8 +58,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void deleteArrayElement(int findIndex);
 
     @Override
-    protected boolean elementExistInThisPosition(Object existPosition) {
-        return (Integer) existPosition > -1;
+    protected boolean elementExistInThisPosition(Integer existPosition) {
+        return existPosition > -1;
     }
 
 }

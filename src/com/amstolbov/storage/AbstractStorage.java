@@ -6,65 +6,75 @@ import com.amstolbov.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
+
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
     public void update(Resume resume) {
-        Object existPosition = checkForExistElement(resume.getUuid());
+        LOG.info("Update " + resume);
+        SK existPosition = checkForExistElement(resume.getUuid());
         updateElement(existPosition, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        Object existPosition = checkForNotExistElement(resume.getUuid());
+        LOG.info("Save " + resume);
+        SK existPosition = checkForNotExistElement(resume.getUuid());
         saveElement(resume, existPosition);
     }
 
     @Override
     public Resume get(String uuid) {
-        Object existPosition = checkForExistElement(uuid);
+        LOG.info("Get " + uuid);
+        SK existPosition = checkForExistElement(uuid);
         return getElement(existPosition);
     }
 
     @Override
     public void delete(String uuid) {
-        Object existPosition = checkForExistElement(uuid);
+        LOG.info("Delete " + uuid);
+        SK existPosition = checkForExistElement(uuid);
         deleteElement(existPosition);
     }
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> result = getCopyAll();
         Collections.sort(result);
         return result;
     }
 
-    protected abstract void updateElement(Object existPosition, Resume resume);
+    protected abstract void updateElement(SK existPosition, Resume resume);
 
-    protected abstract void saveElement(Resume resume, Object existPosition);
+    protected abstract void saveElement(Resume resume, SK existPosition);
 
-    protected abstract Resume getElement(Object existPosition);
+    protected abstract Resume getElement(SK existPosition);
 
-    protected abstract void deleteElement(Object existPosition);
+    protected abstract void deleteElement(SK existPosition);
 
-    protected abstract Object getExistPosition(String uuid);
+    protected abstract SK getExistPosition(String uuid);
 
-    protected abstract boolean elementExistInThisPosition(Object existPosition);
+    protected abstract boolean elementExistInThisPosition(SK existPosition);
 
     protected abstract List<Resume> getCopyAll();
 
-    private Object checkForExistElement(String uuid) {
-        Object existPosition = getExistPosition(uuid);
+    private SK checkForExistElement(String uuid) {
+        SK existPosition = getExistPosition(uuid);
         if (!elementExistInThisPosition(existPosition)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return existPosition;
     }
 
-    private Object checkForNotExistElement(String uuid) {
-        Object existPosition = getExistPosition(uuid);
+    private SK checkForNotExistElement(String uuid) {
+        SK existPosition = getExistPosition(uuid);
         if (elementExistInThisPosition(existPosition)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return existPosition;
