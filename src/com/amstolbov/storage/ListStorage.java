@@ -9,8 +9,8 @@ public class ListStorage extends AbstractStorage {
     protected final List<Resume> storage = new LinkedList<>();
 
     @Override
-    public List<Resume> getAllSortedCertainStorage() {
-        return storage;
+    public List<Resume> getCopyAll() {
+        return new LinkedList<>(storage);
     }
 
     @Override

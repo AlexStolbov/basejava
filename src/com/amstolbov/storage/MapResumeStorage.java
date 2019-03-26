@@ -8,7 +8,7 @@ public class MapResumeStorage extends AbstractStorage {
     protected final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    public List<Resume> getAllSortedCertainStorage() {
+    public List<Resume> getCopyAll() {
         return new ArrayList<>(storage.values());
     }
 

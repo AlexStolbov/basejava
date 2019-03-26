@@ -3,7 +3,6 @@ package com.amstolbov.storage;
 import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,8 +12,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
-    public List<Resume> getAllSortedCertainStorage() {
-        return new ArrayList<>(Arrays.asList(Arrays.copyOf(storage, size)));
+    public List<Resume> getCopyAll() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     @Override

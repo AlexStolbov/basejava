@@ -6,6 +6,7 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
+//public class Resume implements Comparable<Resume>, Iterable<ResumeSection> {
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
@@ -17,6 +18,8 @@ public class Resume implements Comparable<Resume> {
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "full name must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -45,11 +48,12 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + '(' + fullName + ')';
     }
 
     @Override
     public int compareTo(Resume o) {
-        return uuid.compareTo(o.uuid);
+        int comp = fullName.compareTo(o.getFullName());
+        return comp != 0 ? comp : uuid.compareTo(o.getUuid());
     }
 }
