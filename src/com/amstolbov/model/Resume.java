@@ -1,17 +1,17 @@
 package com.amstolbov.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
  */
-//public class Resume implements Comparable<Resume>, Iterable<ResumeSection> {
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
     private final String fullName;
+    private final Map<ContactType, Contact> contacts;
+    private final Map<ResumeSectionType, ResumeSectionAbstract> sections;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -22,6 +22,8 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(fullName, "full name must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
+        this.contacts = new EnumMap<>(ContactType.class);
+        this.sections = new EnumMap<>(ResumeSectionType.class);
     }
 
     public String getUuid() {
@@ -55,5 +57,21 @@ public class Resume implements Comparable<Resume> {
     public int compareTo(Resume o) {
         int comp = fullName.compareTo(o.getFullName());
         return comp != 0 ? comp : uuid.compareTo(o.getUuid());
+    }
+
+    public void addContact(ContactType type, Contact contact) {
+        this.contacts.put(type, contact);
+    }
+
+    public void addSection(ResumeSectionType type, ResumeSectionAbstract section) {
+        sections.put(type, section);
+    }
+
+    public Map<ContactType, Contact> getContacts() {
+        return contacts;
+    }
+
+    public Map<ResumeSectionType, ResumeSectionAbstract> getSections() {
+        return sections;
     }
 }
