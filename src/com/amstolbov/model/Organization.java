@@ -3,24 +3,25 @@ package com.amstolbov.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Organization {
     private String name;
-    private List<Experience> experience;
+    private List<Experience> experiences;
 
     public Organization(String name) {
         this.name = name;
-        this.experience = new ArrayList<>();
+        this.experiences = new ArrayList<>();
     }
 
     public void addExperience(LocalDate start, LocalDate finish, String position, String descr) {
-        experience.add(new Experience(start, finish, position, descr));
+        experiences.add(new Experience(start, finish, position, descr));
     }
 
     @Override
     public String toString() {
         String res = name;
-        for (Experience exp : experience) {
+        for (Experience exp : experiences) {
             res = res + "\n" + " " + exp;
         }
         return res;
@@ -47,4 +48,17 @@ public class Organization {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return name.equals(that.name) &&
+                experiences.equals(that.experiences);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, experiences);
+    }
 }

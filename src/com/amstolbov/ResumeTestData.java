@@ -2,7 +2,6 @@ package com.amstolbov;
 
 import com.amstolbov.model.*;
 
-import java.awt.image.BufferedImage;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -22,9 +21,9 @@ public class ResumeTestData {
     }
 
     private static void addContacts(Resume resume) {
-        Contact phone = new Contact(new BufferedImage(1,1,1), "+7(921) 855-0482");
+        Contact phone = new Contact("+7(921) 855-0482");
         resume.addContact(ContactType.PHONE, phone);
-        Contact skype = new Contact(new BufferedImage(1,1,1), "grigory.kislin");
+        Contact skype = new Contact("grigory.kislin");
         resume.addContact(ContactType.SKYPE, skype);
     }
 
@@ -41,7 +40,7 @@ public class ResumeTestData {
     }
 
     private static void addAchievement(Resume resume) {
-        ResumeSectionAbstract<String> sectionAchievement = new ResumeSectionString();
+        ResumeSectionAbstract<String> sectionAchievement = new ResumeSectionList();
         sectionAchievement.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
         sectionAchievement.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         sectionAchievement.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
@@ -49,7 +48,7 @@ public class ResumeTestData {
     }
 
     private static void addQualification(Resume resume) {
-        ResumeSectionAbstract<String> sectionQualifications = new ResumeSectionString();
+        ResumeSectionAbstract<String> sectionQualifications = new ResumeSectionList();
         sectionQualifications.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
         sectionQualifications.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         sectionQualifications.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
