@@ -28,19 +28,19 @@ public class ResumeTestData {
     }
 
     private static void addObjective(Resume resume) {
-        ResumeSectionAbstract<String> sectionObjective = new ResumeSectionString();
+        ResumeSectionAbstract<String> sectionObjective = new ResumeSectionSingle();
         sectionObjective.addSectionPart("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         resume.addSection(ResumeSectionType.OBJECTIVE, sectionObjective);
     }
 
     private static void addPersonal(Resume resume) {
-        ResumeSectionAbstract<String> sectionPersonal = new ResumeSectionString();
+        ResumeSectionAbstract<String> sectionPersonal = new ResumeSectionSingle<>();
         sectionPersonal.addSectionPart("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         resume.addSection(ResumeSectionType.PERSONAL, sectionPersonal);
     }
 
     private static void addAchievement(Resume resume) {
-        ResumeSectionAbstract<String> sectionAchievement = new ResumeSectionList();
+        ResumeSectionAbstract<String> sectionAchievement = new ResumeSectionComposite<>();
         sectionAchievement.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
         sectionAchievement.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         sectionAchievement.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
@@ -48,7 +48,7 @@ public class ResumeTestData {
     }
 
     private static void addQualification(Resume resume) {
-        ResumeSectionAbstract<String> sectionQualifications = new ResumeSectionList();
+        ResumeSectionAbstract<String> sectionQualifications = new ResumeSectionComposite<>();
         sectionQualifications.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
         sectionQualifications.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         sectionQualifications.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
@@ -56,7 +56,7 @@ public class ResumeTestData {
     }
 
     private static void  addExperience(Resume resume) {
-        ResumeSectionAbstract<Organization> jobs = new ResumeSectionOrganization();
+        ResumeSectionAbstract<Organization> jobs = new ResumeSectionComposite<>();
         Organization org1 = new Organization("Java Online Projects");
         org1.addExperience(LocalDate.of(2014,10,1)
                 , LocalDate.of(2016, 1, 1)
@@ -73,7 +73,7 @@ public class ResumeTestData {
     }
 
     private static void addEducation(Resume resume) {
-        ResumeSectionAbstract<Organization> educations = new ResumeSectionOrganization();
+        ResumeSectionAbstract<Organization> educations = new ResumeSectionComposite<>();
         Organization school1 = new Organization("Coursera");
         school1.addExperience(LocalDate.of(2013,3,1)
                 , LocalDate.of(2013, 5, 1)
