@@ -13,7 +13,7 @@ public class ResumeSectionComposite<T> extends ResumeSectionAbstract<T> {
     }
 
     @Override
-    public void addSectionPart(T sectionPart) {
+    public void addSectionInfo(T sectionPart) {
         parts.add(sectionPart);
     }
 

@@ -7,7 +7,7 @@ public class ResumeSectionSingle<T> extends ResumeSectionAbstract<T> {
     private T description;
 
     @Override
-    public void addSectionPart(T sectionPart) {
+    public void addSectionInfo(T sectionPart) {
         this.description = sectionPart;
     }
 

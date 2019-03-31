@@ -9,7 +9,7 @@ public abstract class ResumeSectionAbstract<T> {
     /**
      * Add new information in section.
      */
-    public abstract void addSectionPart(T sectionPart);
+    public abstract void addSectionInfo(T sectionPart);
 
     /**
      * Create representation of section.
