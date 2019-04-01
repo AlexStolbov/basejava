@@ -11,7 +11,7 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
     private final Map<ContactType, Contact> contacts;
-    private final Map<ResumeSectionType, ResumeSectionAbstract> sections;
+    private final Map<ResumeSectionType, SectionAbstract> sections;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -38,7 +38,7 @@ public class Resume implements Comparable<Resume> {
         this.contacts.put(type, contact);
     }
 
-    public void addSection(ResumeSectionType type, ResumeSectionAbstract section) {
+    public void addSection(ResumeSectionType type, SectionAbstract section) {
         sections.put(type, section);
     }
 
@@ -46,7 +46,7 @@ public class Resume implements Comparable<Resume> {
         return contacts;
     }
 
-    public Map<ResumeSectionType, ResumeSectionAbstract> getSections() {
+    public Map<ResumeSectionType, SectionAbstract> getSections() {
         return sections;
     }
 

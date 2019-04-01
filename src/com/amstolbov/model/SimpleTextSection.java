@@ -2,17 +2,16 @@ package com.amstolbov.model;
 
 import java.util.Objects;
 
-public class ResumeSectionSingle<T> extends ResumeSectionAbstract<T> {
+public class SimpleTextSection<T> extends SectionAbstract<T> {
 
     private T description;
 
-    @Override
     public void addSectionInfo(T sectionPart) {
         this.description = sectionPart;
     }
 
     @Override
-    public String createRepresentation() {
+    public String toString() {
         return description.toString();
     }
 
@@ -20,7 +19,7 @@ public class ResumeSectionSingle<T> extends ResumeSectionAbstract<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ResumeSectionSingle that = (ResumeSectionSingle) o;
+        SimpleTextSection that = (SimpleTextSection) o;
         return description.equals(that.description);
     }
 

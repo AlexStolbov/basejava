@@ -4,21 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ResumeSectionComposite<T> extends ResumeSectionAbstract<T> {
+public class ListSection<T> extends SectionAbstract<T> {
 
     protected final List<T> parts;
 
-    public ResumeSectionComposite() {
+    public ListSection() {
         this.parts = new ArrayList<>();
     }
 
-    @Override
     public void addSectionInfo(T sectionPart) {
         parts.add(sectionPart);
     }
 
     @Override
-    public String createRepresentation() {
+    public String toString() {
         String res = "";
         for (T part : parts) {
             res = res + (res.length() == 0 ? "" : "\n") + " " + part;
@@ -30,7 +29,7 @@ public class ResumeSectionComposite<T> extends ResumeSectionAbstract<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ResumeSectionComposite that = (ResumeSectionComposite) o;
+        ListSection that = (ListSection) o;
         return parts.equals(that.parts);
     }
 

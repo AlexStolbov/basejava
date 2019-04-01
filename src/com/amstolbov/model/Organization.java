@@ -7,10 +7,12 @@ import java.util.Objects;
 
 public class Organization {
     private String name;
+    private String url;
     private List<Experience> experiences;
 
-    public Organization(String name) {
+    public Organization(String name, String url) {
         this.name = name;
+        this.url = url;
         this.experiences = new ArrayList<>();
     }
 
