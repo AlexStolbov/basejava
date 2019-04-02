@@ -2,17 +2,17 @@ package com.amstolbov.model;
 
 import java.util.Objects;
 
-public class SimpleTextSection<T> extends SectionAbstract<T> {
+public class SimpleTextSection extends SectionAbstract {
 
-    private T description;
+    private final String description;
 
-    public void addSectionInfo(T sectionPart) {
-        this.description = sectionPart;
+    public SimpleTextSection(String descr) {
+        this.description = descr;
     }
 
     @Override
     public String toString() {
-        return description.toString();
+        return description;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SimpleTextSection<T> extends SectionAbstract<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SimpleTextSection that = (SimpleTextSection) o;
-        return description.equals(that.description);
+        return Objects.equals(description, that.description);
     }
 
     @Override

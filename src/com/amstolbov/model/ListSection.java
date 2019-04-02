@@ -4,25 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection<T> extends SectionAbstract<T> {
+public class ListSection extends SectionAbstract {
 
-    protected final List<T> parts;
+    protected final List<String> parts = new ArrayList<>();
 
-    public ListSection() {
-        this.parts = new ArrayList<>();
-    }
-
-    public void addSectionInfo(T sectionPart) {
+    public void addSectionPart(String sectionPart) {
         parts.add(sectionPart);
     }
 
     @Override
     public String toString() {
-        String res = "";
-        for (T part : parts) {
-            res = res + (res.length() == 0 ? "" : "\n") + " " + part;
-        }
-        return res;
+        return parts.toString();
     }
 
     @Override
