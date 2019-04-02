@@ -50,6 +50,9 @@ public class Organization {
         private final String description;
 
         public Experience(LocalDate dateStart, LocalDate dateFinish, String position, String descr) {
+            Objects.requireNonNull(dateStart, "Experience dateStart must not be null");
+            Objects.requireNonNull(dateFinish, "Experience dateFinish must not be null");
+            Objects.requireNonNull(position, "Experience position must not be null");
             this.dateStart = dateStart;
             this.dateFinish = dateFinish;
             this.position = position;

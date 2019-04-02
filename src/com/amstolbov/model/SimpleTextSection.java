@@ -2,7 +2,7 @@ package com.amstolbov.model;
 
 import java.util.Objects;
 
-public class SimpleTextSection extends SectionAbstract {
+public class SimpleTextSection extends AbstractSection {
 
     private final String description;
 

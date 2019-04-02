@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection extends SectionAbstract {
+public class ListSection extends AbstractSection {
 
-    protected final List<String> parts = new ArrayList<>();
+    private final List<String> parts = new ArrayList<>();
 
     public void addSectionPart(String sectionPart) {
         parts.add(sectionPart);

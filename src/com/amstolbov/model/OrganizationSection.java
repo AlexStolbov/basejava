@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class OrganizationSection extends SectionAbstract{
+public class OrganizationSection extends AbstractSection {
     private final Set<Organization> organizations = new HashSet<>();
 
     public void addOrganization(Organization org) {
