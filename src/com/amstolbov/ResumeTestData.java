@@ -8,8 +8,10 @@ import java.util.Map;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume resume = new Resume("Grigory Kislin");
+        ResumeTestData.printTest(ResumeTestData.fillResume(new Resume(addRandom("Resume name "))));
+    }
 
+    public static Resume fillResume(Resume resume) {
         ResumeTestData.addContacts(resume);
         ResumeTestData.addObjective(resume);
         ResumeTestData.addPersonal(resume);
@@ -17,72 +19,69 @@ public class ResumeTestData {
         ResumeTestData.addQualification(resume);
         ResumeTestData.addExperience(resume);
         ResumeTestData.addEducation(resume);
-
-        ResumeTestData.printTest(resume);
+        return resume;
     }
 
     private static void addContacts(Resume resume) {
-        resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
-        resume.addContact(ContactType.SKYPE, "grigory.kislin");
+        resume.addContact(ContactType.PHONE, addRandom("phone number"));
+        resume.addContact(ContactType.SKYPE, addRandom("skype number"));
     }
 
     private static void addObjective(Resume resume) {
-        SimpleTextSection sectionObjective = new SimpleTextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        SimpleTextSection sectionObjective = new SimpleTextSection(addRandom("objective text"));
         resume.addSection(ResumeSectionType.OBJECTIVE, sectionObjective);
     }
 
     private static void addPersonal(Resume resume) {
-        SimpleTextSection sectionPersonal = new SimpleTextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        SimpleTextSection sectionPersonal = new SimpleTextSection(addRandom("personal text"));
         resume.addSection(ResumeSectionType.PERSONAL, sectionPersonal);
     }
 
     private static void addAchievement(Resume resume) {
         ListSection sectionAchievement = new ListSection();
-        sectionAchievement.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-        sectionAchievement.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-        sectionAchievement.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
+        sectionAchievement.addSectionPart(addRandom("achievement 1 -"));
+        sectionAchievement.addSectionPart(addRandom("achievement 2 -"));
+        sectionAchievement.addSectionPart(addRandom("achievement 3 -"));
         resume.addSection(ResumeSectionType.ACHIEVEMENT, sectionAchievement);
     }
 
     private static void addQualification(Resume resume) {
         ListSection sectionQualifications = new ListSection();
-        sectionQualifications.addSectionPart("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-        sectionQualifications.addSectionPart("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-        sectionQualifications.addSectionPart("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера");
+        sectionQualifications.addSectionPart(addRandom("qualification 1 -"));
+        sectionQualifications.addSectionPart(addRandom("qualification 2 -"));
+        sectionQualifications.addSectionPart(addRandom("qualification 3 -"));
         resume.addSection(ResumeSectionType.QUALIFICATIONS, sectionQualifications);
     }
 
     private static void  addExperience(Resume resume) {
         OrganizationSection jobs = new OrganizationSection();
-        Organization org1 = new Organization("Java Online Projects", "http://javaops.ru/");
-        org1.addExperience(DateUtil.of(2014, Month.APRIL)
-                , DateUtil.of(2016, Month.JANUARY)
-                , "Java архитектор"
-                , "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
-        jobs.addOrganization(org1);
-        Organization org2 = new Organization("Luxoft (Deutsche Bank)", "http://www.luxoft.ru/");
-        org2.addExperience(DateUtil.of(2010,Month.DECEMBER)
-                , DateUtil.of(2012, Month.APRIL)
-                , "Ведущий программист"
-                , "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML");
-        jobs.addOrganization(org2);
+        for (int i = 0; i < 2; i++) {
+            Organization org = new Organization(addRandom("Software company"), addRandom("url"));
+            for (int y = 0; y < 2; y++) {
+                int border = randomFromRange(1998, 2019);
+                org.addExperience(DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
+                        , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
+                        , addRandom("position")
+                        , addRandom("position description"));
+            }
+            jobs.addOrganization(org);
+        }
         resume.addSection(ResumeSectionType.EXPERIENCE, jobs);
     }
 
     private static void addEducation(Resume resume) {
         OrganizationSection educations = new OrganizationSection();
-        Organization school1 = new Organization("Coursera", "https://www.coursera.org/course/progfun");
-        school1.addExperience(DateUtil.of(2013, Month.MARCH)
-                , DateUtil.of(2013, Month.MAY)
-                , ""
-                , "\"Functional Programming Principles in Scala\" by Martin Odersky");
-        educations.addOrganization(school1);
-        Organization school2 = new Organization("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366");
-        school2.addExperience(DateUtil.of(2011, Month.MARCH)
-                , DateUtil.of(2011, Month.APRIL)
-                , ""
-                , "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"");
-        educations.addOrganization(school2);
+        for (int i = 0; i < 2; i++) {
+            Organization org = new Organization(addRandom("School"), addRandom("url"));
+            for (int y = 0; y < 2; y++) {
+                int border = randomFromRange(2000, 2019);
+                org.addExperience(DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
+                        , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
+                        , ""
+                        , addRandom("training course"));
+            }
+            educations.addOrganization(org);
+        }
         resume.addSection(ResumeSectionType.EDUCATION, educations);
     }
 
@@ -94,4 +93,14 @@ public class ResumeTestData {
             System.out.println(pair.getKey() + "\n" + pair.getValue());
         }
     }
+
+    private static String addRandom(String name) {
+        //return name + String.format(" %d", new Random(System.currentTimeMillis()).nextInt());
+        return name + " " + randomFromRange(0, 10000000);
+    }
+
+    private static int randomFromRange(int min, int max) {
+        return min + (int) Math.round(Math.random() * (max - min));
+    }
+
 }

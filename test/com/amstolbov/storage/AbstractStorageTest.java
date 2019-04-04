@@ -1,5 +1,6 @@
 package com.amstolbov.storage;
 
+import com.amstolbov.ResumeTestData;
 import com.amstolbov.exception.ExistStorageException;
 import com.amstolbov.exception.NotExistStorageException;
 import com.amstolbov.model.Resume;
@@ -27,6 +28,10 @@ public class AbstractStorageTest {
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
+        ResumeTestData.fillResume(RESUME_1);
+        ResumeTestData.fillResume(RESUME_2);
+        ResumeTestData.fillResume(RESUME_3);
+        ResumeTestData.fillResume(RESUME_4);
     }
 
     @Before
