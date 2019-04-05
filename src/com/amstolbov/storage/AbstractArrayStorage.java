@@ -58,8 +58,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected abstract void deleteArrayElement(int findIndex);
 
     @Override
-    protected boolean isExist(Integer existPosition) {
-        return existPosition > -1;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey > -1;
     }
 
 }

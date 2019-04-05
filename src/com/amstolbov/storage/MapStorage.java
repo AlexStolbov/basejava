@@ -48,7 +48,7 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected boolean isExist(String existPosition) {
-        return storage.containsKey(existPosition);
+    protected boolean isExist(String searchKey) {
+        return storage.containsKey(searchKey);
     }
 }

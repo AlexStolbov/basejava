@@ -48,7 +48,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected boolean isExist(Resume existPosition) {
-        return existPosition != null;
+    protected boolean isExist(Resume searchKey) {
+        return searchKey != null;
     }
 }

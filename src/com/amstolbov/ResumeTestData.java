@@ -8,10 +8,11 @@ import java.util.Map;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        ResumeTestData.printTest(ResumeTestData.fillResume(new Resume(addRandom("Resume name "))));
+        ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name ")));
     }
 
-    public static Resume fillResume(Resume resume) {
+    public static Resume getResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
         ResumeTestData.addContacts(resume);
         ResumeTestData.addObjective(resume);
         ResumeTestData.addPersonal(resume);
@@ -59,10 +60,12 @@ public class ResumeTestData {
             Organization org = new Organization(addRandom("Software company"), addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(1998, 2019);
-                org.addExperience(DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
+                Experience experience = new Experience(
+                        DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
                         , addRandom("position")
                         , addRandom("position description"));
+                org.addExperience(experience);
             }
             jobs.addOrganization(org);
         }
@@ -75,10 +78,13 @@ public class ResumeTestData {
             Organization org = new Organization(addRandom("School"), addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(2000, 2019);
-                org.addExperience(DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
+                Experience experience = new Experience(
+                        DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
                         , ""
-                        , addRandom("training course"));
+                        , addRandom("training course")
+                );
+                org.addExperience(experience);
             }
             educations.addOrganization(org);
         }

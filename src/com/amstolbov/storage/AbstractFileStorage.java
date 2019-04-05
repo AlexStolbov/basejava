@@ -59,14 +59,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected boolean isExist(File existPosition) {
-        return existPosition.exists();
+    protected boolean isExist(File searchKey) {
+        return searchKey.exists();
     }
 
     @Override
     protected List<Resume> getCopyAll() {
         List<Resume> result = new ArrayList<>();
-        for (File f : directory.listFiles()) {
+        for (File f : getFiles()) {
             result.add(doRead(f));
         }
         return result;
@@ -74,17 +74,23 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File f : directory.listFiles()) {
-            f.delete();
+        for (File f : getFiles()) {
+            if (!f.delete()) {
+                throw new StorageException("Can't clear file storage: ", "");
+            }
         }
     }
 
     @Override
     public int size() {
-        int result = 0;
-        for (File f : directory.listFiles()) {
-            result++;
+        return getFiles().length;
+    }
+
+    private File[]  getFiles() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Can't read file storage", "");
         }
-        return result;
+        return files;
     }
 }
