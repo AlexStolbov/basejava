@@ -23,32 +23,32 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected void updateElement(Resume existPosition, Resume resume) {
+    protected void doUpdate(Resume existPosition, Resume resume) {
         storage.put(existPosition.getUuid(), resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, Resume existPosition) {
+    protected void doSave(Resume resume, Resume existPosition) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getElement(Resume existPosition) {
+    protected Resume doGet(Resume existPosition) {
         return existPosition;
     }
 
     @Override
-    protected void deleteElement(Resume existElement) {
+    protected void doDelete(Resume existElement) {
         storage.remove(existElement.getUuid());
     }
 
     @Override
-    protected Resume getExistPosition(String uuid) {
+    protected Resume getSearchKey(String uuid) {
         return storage.get(uuid);
     }
 
     @Override
-    protected boolean elementExistInThisPosition(Resume existPosition) {
+    protected boolean isExist(Resume existPosition) {
         return existPosition != null;
     }
 }

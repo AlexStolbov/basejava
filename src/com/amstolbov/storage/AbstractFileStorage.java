@@ -25,12 +25,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected void updateElement(File existPosition, Resume resume) {
+    protected void doUpdate(File existPosition, Resume resume) {
         doWrite(resume, existPosition);
     }
 
     @Override
-    protected void saveElement(Resume resume, File existPosition) {
+    protected void doSave(Resume resume, File existPosition) {
         try {
             existPosition.createNewFile();
             doWrite(resume, existPosition);
@@ -42,24 +42,24 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected abstract void doWrite(Resume resume, File file);
 
     @Override
-    protected Resume getElement(File existPosition) {
+    protected Resume doGet(File existPosition) {
         return doRead(existPosition);
     }
 
     protected abstract Resume doRead(File file);
 
     @Override
-    protected void deleteElement(File file) {
+    protected void doDelete(File file) {
         file.delete();
     }
 
     @Override
-    protected File getExistPosition(String uuid) {
+    protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
     }
 
     @Override
-    protected boolean elementExistInThisPosition(File existPosition) {
+    protected boolean isExist(File existPosition) {
         return existPosition.exists();
     }
 

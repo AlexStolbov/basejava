@@ -30,12 +30,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void updateElement(Integer existPosition, Resume resume) {
+    protected void doUpdate(Integer existPosition, Resume resume) {
         storage[existPosition] = resume;
     }
 
     @Override
-    protected void saveElement(Resume resume, Integer existPosition) {
+    protected void doSave(Resume resume, Integer existPosition) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
@@ -44,12 +44,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected Resume getElement(Integer existPosition) {
+    protected Resume doGet(Integer existPosition) {
         return storage[existPosition];
     }
 
     @Override
-    protected void deleteElement(Integer existPosition) {
+    protected void doDelete(Integer existPosition) {
         deleteArrayElement(existPosition);
         storage[size - 1] = null;
         size--;
@@ -58,7 +58,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected abstract void deleteArrayElement(int findIndex);
 
     @Override
-    protected boolean elementExistInThisPosition(Integer existPosition) {
+    protected boolean isExist(Integer existPosition) {
         return existPosition > -1;
     }
 

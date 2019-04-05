@@ -8,36 +8,36 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class AbstractStorage<S> implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
 
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
     public void update(Resume resume) {
         LOG.info("Update " + resume);
-        S existPosition = checkForExistElement(resume.getUuid());
-        updateElement(existPosition, resume);
+        SK existPosition = getExistedSearchKey(resume.getUuid());
+        doUpdate(existPosition, resume);
     }
 
     @Override
     public void save(Resume resume) {
         LOG.info("Save " + resume);
-        S existPosition = checkForNotExistElement(resume.getUuid());
-        saveElement(resume, existPosition);
+        SK existPosition = getNotExistedSearchKey(resume.getUuid());
+        doSave(resume, existPosition);
     }
 
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        S existPosition = checkForExistElement(uuid);
-        return getElement(existPosition);
+        SK existPosition = getExistedSearchKey(uuid);
+        return doGet(existPosition);
     }
 
     @Override
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        S existPosition = checkForExistElement(uuid);
-        deleteElement(existPosition);
+        SK existPosition = getExistedSearchKey(uuid);
+        doDelete(existPosition);
     }
 
     @Override
@@ -48,36 +48,36 @@ public abstract class AbstractStorage<S> implements Storage {
         return result;
     }
 
-    protected abstract void updateElement(S existPosition, Resume resume);
+    protected abstract void doUpdate(SK existPosition, Resume resume);
 
-    protected abstract void saveElement(Resume resume, S existPosition);
+    protected abstract void doSave(Resume resume, SK existPosition);
 
-    protected abstract Resume getElement(S existPosition);
+    protected abstract Resume doGet(SK existPosition);
 
-    protected abstract void deleteElement(S existPosition);
+    protected abstract void doDelete(SK existPosition);
 
-    protected abstract S getExistPosition(String uuid);
+    protected abstract SK getSearchKey(String uuid);
 
-    protected abstract boolean elementExistInThisPosition(S existPosition);
+    protected abstract boolean isExist(SK existPosition);
 
     protected abstract List<Resume> getCopyAll();
 
-    private S checkForExistElement(String uuid) {
-        S existPosition = getExistPosition(uuid);
-        if (!elementExistInThisPosition(existPosition)) {
+    private SK getExistedSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
             LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
-        return existPosition;
+        return searchKey;
     }
 
-    private S checkForNotExistElement(String uuid) {
-        S existPosition = getExistPosition(uuid);
-        if (elementExistInThisPosition(existPosition)) {
+    private SK getNotExistedSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
             LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
-        return existPosition;
+        return searchKey;
     }
 
 }

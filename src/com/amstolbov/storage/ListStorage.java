@@ -24,27 +24,27 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void updateElement(Integer existPosition, Resume resume) {
+    protected void doUpdate(Integer existPosition, Resume resume) {
         storage.set(existPosition, resume);
     }
 
     @Override
-    protected void saveElement(Resume resume, Integer existPosition) {
+    protected void doSave(Resume resume, Integer existPosition) {
         storage.add(resume);
     }
 
     @Override
-    protected Resume getElement(Integer existPosition) {
+    protected Resume doGet(Integer existPosition) {
         return storage.get(existPosition);
     }
 
     @Override
-    protected void deleteElement(Integer existPosition) {
+    protected void doDelete(Integer existPosition) {
         storage.remove((int) existPosition);
     }
 
     @Override
-    protected Integer getExistPosition(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -54,7 +54,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected boolean elementExistInThisPosition(Integer existPosition) {
+    protected boolean isExist(Integer existPosition) {
         return (int) existPosition > -1;
     }
 }
