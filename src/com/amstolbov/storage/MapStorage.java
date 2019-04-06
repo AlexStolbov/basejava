@@ -23,8 +23,8 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected void doUpdate(String existPosition, Resume resume) {
-        storage.put((String) existPosition, resume);
+    protected void doUpdate(String searchKey, Resume resume) {
+        storage.put((String) searchKey, resume);
     }
 
     @Override

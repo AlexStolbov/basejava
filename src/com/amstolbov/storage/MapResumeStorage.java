@@ -23,8 +23,8 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected void doUpdate(Resume existPosition, Resume resume) {
-        storage.put(existPosition.getUuid(), resume);
+    protected void doUpdate(Resume searchKey, Resume resume) {
+        storage.put(searchKey.getUuid(), resume);
     }
 
     @Override

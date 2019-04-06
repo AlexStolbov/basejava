@@ -59,6 +59,22 @@ public class Organization {
             this.description = descr;
         }
 
+        public LocalDate getDateStart() {
+            return dateStart;
+        }
+
+        public LocalDate getDateFinish() {
+            return dateFinish;
+        }
+
+        public String getPosition() {
+            return position;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
