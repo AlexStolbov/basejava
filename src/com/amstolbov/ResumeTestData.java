@@ -60,7 +60,7 @@ public class ResumeTestData {
             Organization org = new Organization(addRandom("Software company"), addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(1998, 2019);
-                Experience experience = new Experience(
+                Organization.Experience experience = new Organization.Experience(
                         DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
                         , addRandom("position")
@@ -78,7 +78,7 @@ public class ResumeTestData {
             Organization org = new Organization(addRandom("School"), addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(2000, 2019);
-                Experience experience = new Experience(
+                Organization.Experience experience = new Organization.Experience(
                         DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
                         , ""
