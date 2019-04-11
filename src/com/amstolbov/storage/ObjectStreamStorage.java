@@ -5,7 +5,7 @@ import com.amstolbov.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage implements Serializator {
+public class ObjectStreamStorage implements Serializer {
 
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {

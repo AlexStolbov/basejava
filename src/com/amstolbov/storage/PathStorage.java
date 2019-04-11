@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 public class PathStorage extends AbstractStorage<Path> {
 
     protected Path directory;
-    private final Serializator serializator;
+    private final Serializer serializer;
 
-    public PathStorage(String dir, Serializator serializator) {
+    public PathStorage(String dir, Serializer serializer) {
         Objects.requireNonNull(dir, "directory must not be null");
         this.directory = Paths.get(dir);
         if (!Files.isDirectory(directory)) {
@@ -26,13 +26,13 @@ public class PathStorage extends AbstractStorage<Path> {
         if (!Files.isReadable(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not readable/writable");
         }
-        this.serializator = serializator;
+        this.serializer = serializer;
     }
 
     @Override
     protected void doUpdate(Path searchKey, Resume resume) {
         try {
-            serializator.doWrite(resume, new BufferedOutputStream(new FileOutputStream(searchKey.toFile())));
+            serializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(searchKey.toFile())));
         } catch (IOException e) {
             throw new StorageException("Can't update resume", searchKey.toString(), e);
         }
@@ -42,7 +42,7 @@ public class PathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume resume, Path existPosition) {
         try {
             Path newPath = Files.createFile(existPosition);
-            serializator.doWrite(resume, new BufferedOutputStream(new FileOutputStream(newPath.toFile())));
+            serializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(newPath.toFile())));
         } catch (IOException e) {
             throw new StorageException("Can't save file", existPosition.toString(), e);
         }
@@ -51,7 +51,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path existPosition) {
         try {
-            return serializator.doRead(new BufferedInputStream(new FileInputStream(existPosition.toFile())));
+            return serializer.doRead(new BufferedInputStream(new FileInputStream(existPosition.toFile())));
         } catch (IOException e) {
             throw new StorageException("Can't read file storage: ", existPosition.toString());
         }
