@@ -4,12 +4,15 @@ import com.amstolbov.exception.ExistStorageException;
 import com.amstolbov.exception.NotExistStorageException;
 import com.amstolbov.model.Resume;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractStorage<SK> implements Storage {
 
+    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storage\\";
+    protected static final File STORAGE_DIR = new File(STORAGE_PATH);
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
@@ -22,22 +25,22 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public void save(Resume resume) {
         LOG.info("Save " + resume);
-        SK existPosition = getNotExistedSearchKey(resume.getUuid());
-        doSave(resume, existPosition);
+        SK searchKey = getNotExistedSearchKey(resume.getUuid());
+        doSave(resume, searchKey);
     }
 
     @Override
     public Resume get(String uuid) {
         LOG.info("Get " + uuid);
-        SK existPosition = getExistedSearchKey(uuid);
-        return doGet(existPosition);
+        SK searchKey = getExistedSearchKey(uuid);
+        return doGet(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        SK existPosition = getExistedSearchKey(uuid);
-        doDelete(existPosition);
+        SK searchKey = getExistedSearchKey(uuid);
+        doDelete(searchKey);
     }
 
     @Override

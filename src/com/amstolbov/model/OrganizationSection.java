@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class OrganizationSection extends AbstractSection {
+    private static final long serialVersonUID = 1L;
+
     private final Set<Organization> organizations = new HashSet<>();
 
     public void addOrganization(Organization org) {

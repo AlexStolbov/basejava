@@ -1,11 +1,14 @@
 package com.amstolbov.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume> {
+public class Resume implements Comparable<Resume>, Serializable {
+
+    private static final long serialVersonUID = 1L;
 
     // Unique identifier
     private final String uuid;

@@ -1,11 +1,14 @@
 package com.amstolbov.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Organization {
+public class Organization implements Serializable {
+    private static final long serialVersonUID = 1L;
+
     private final String name;
     private final String url;
     private final List<Experience> experiences;
@@ -43,7 +46,9 @@ public class Organization {
         return Objects.hash(name, experiences);
     }
 
-    public static class Experience {
+    public static class Experience implements Serializable {
+        private static final long serialVersonUID = 1L;
+
         private final LocalDate dateStart;
         private final LocalDate dateFinish;
         private final String position;

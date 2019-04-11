@@ -3,6 +3,7 @@ package com.amstolbov.model;
 import java.util.Objects;
 
 public class SimpleTextSection extends AbstractSection {
+    private static final long serialVersonUID = 1L;
 
     private final String description;
 
