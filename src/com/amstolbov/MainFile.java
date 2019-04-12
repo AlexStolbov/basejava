@@ -7,18 +7,14 @@ public class MainFile {
 
     public void printFileSystemTree(File root, String shift) throws IOException {
         File[] content = root.listFiles();
-        if (content == null) {
-            return;
-        }
-        for (File currentFile : content) {
-            if (currentFile.isDirectory()) {
-                System.out.println(shift + "[" + currentFile.getName() + "]");
-                printFileSystemTree(currentFile, shift + "|\t");
-            }
-        }
-        for (File cf : content) {
-            if (!cf.isDirectory()){
-                System.out.println(shift + cf.getName());
+        if (content != null) {
+            for (File currentFile : content) {
+                if (currentFile.isDirectory()) {
+                    System.out.println(shift + "[" + currentFile.getName() + "]");
+                    printFileSystemTree(currentFile, shift + "|\t");
+                } else {
+                    System.out.println(shift + currentFile.getName());
+                }
             }
         }
     }
