@@ -2,6 +2,7 @@ package com.amstolbov.storage;
 
 import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;
+import com.amstolbov.storage.serializers.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -78,7 +79,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected  List<Resume> getCopyAll() {
-        return getFiles().map(el -> doGet(el)).collect(Collectors.toList());
+        return getFiles().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override

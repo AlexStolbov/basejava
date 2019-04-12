@@ -2,6 +2,7 @@ package com.amstolbov.storage;
 
 import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;
+import com.amstolbov.storage.serializers.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;

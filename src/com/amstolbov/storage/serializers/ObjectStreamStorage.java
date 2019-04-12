@@ -1,4 +1,4 @@
-package com.amstolbov.storage;
+package com.amstolbov.storage.serializers;
 
 import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;

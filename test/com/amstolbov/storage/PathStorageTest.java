@@ -1,6 +1,6 @@
 package com.amstolbov.storage;
 
-import static org.junit.Assert.*;
+import com.amstolbov.storage.serializers.ObjectStreamStorage;
 
 public class PathStorageTest extends AbstractStorageTest{
 

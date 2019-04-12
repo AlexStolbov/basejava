@@ -1,6 +1,6 @@
 package com.amstolbov.model;
 
-public enum ResumeSectionType {
+public enum SectionType {
     OBJECTIVE("Позиция"),
     PERSONAL("Личные качества"),
     ACHIEVEMENT("Достижения"),
@@ -10,7 +10,7 @@ public enum ResumeSectionType {
 
     private String title;
 
-    ResumeSectionType(String title) {
+    SectionType(String title) {
         this.title = title;
     }
 

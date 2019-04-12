@@ -30,12 +30,12 @@ public class ResumeTestData {
 
     private static void addObjective(Resume resume) {
         SimpleTextSection sectionObjective = new SimpleTextSection(addRandom("objective text"));
-        resume.addSection(ResumeSectionType.OBJECTIVE, sectionObjective);
+        resume.addSection(SectionType.OBJECTIVE, sectionObjective);
     }
 
     private static void addPersonal(Resume resume) {
         SimpleTextSection sectionPersonal = new SimpleTextSection(addRandom("personal text"));
-        resume.addSection(ResumeSectionType.PERSONAL, sectionPersonal);
+        resume.addSection(SectionType.PERSONAL, sectionPersonal);
     }
 
     private static void addAchievement(Resume resume) {
@@ -43,7 +43,7 @@ public class ResumeTestData {
         sectionAchievement.addSectionPart(addRandom("achievement 1 -"));
         sectionAchievement.addSectionPart(addRandom("achievement 2 -"));
         sectionAchievement.addSectionPart(addRandom("achievement 3 -"));
-        resume.addSection(ResumeSectionType.ACHIEVEMENT, sectionAchievement);
+        resume.addSection(SectionType.ACHIEVEMENT, sectionAchievement);
     }
 
     private static void addQualification(Resume resume) {
@@ -51,7 +51,7 @@ public class ResumeTestData {
         sectionQualifications.addSectionPart(addRandom("qualification 1 -"));
         sectionQualifications.addSectionPart(addRandom("qualification 2 -"));
         sectionQualifications.addSectionPart(addRandom("qualification 3 -"));
-        resume.addSection(ResumeSectionType.QUALIFICATIONS, sectionQualifications);
+        resume.addSection(SectionType.QUALIFICATIONS, sectionQualifications);
     }
 
     private static void  addExperience(Resume resume) {
@@ -69,7 +69,7 @@ public class ResumeTestData {
             }
             jobs.addOrganization(org);
         }
-        resume.addSection(ResumeSectionType.EXPERIENCE, jobs);
+        resume.addSection(SectionType.EXPERIENCE, jobs);
     }
 
     private static void addEducation(Resume resume) {
@@ -88,14 +88,14 @@ public class ResumeTestData {
             }
             educations.addOrganization(org);
         }
-        resume.addSection(ResumeSectionType.EDUCATION, educations);
+        resume.addSection(SectionType.EDUCATION, educations);
     }
 
     private static void printTest(Resume resume) {
         for (Map.Entry<ContactType, String> pair : resume.getContacts().entrySet()) {
             System.out.println(pair.getKey() + "\n" + pair.getValue());
         }
-        for (Map.Entry<ResumeSectionType, AbstractSection> pair : resume.getSections().entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> pair : resume.getSections().entrySet()) {
             System.out.println(pair.getKey() + "\n" + pair.getValue());
         }
     }

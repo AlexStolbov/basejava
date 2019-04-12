@@ -1,5 +1,7 @@
 package com.amstolbov.storage;
 
+import com.amstolbov.storage.serializers.ObjectStreamStorage;
+
 public class FileStorageObjectTest extends AbstractStorageTest{
 
     public FileStorageObjectTest() {
