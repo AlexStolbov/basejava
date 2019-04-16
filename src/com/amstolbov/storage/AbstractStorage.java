@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public abstract class AbstractStorage<SK> implements Storage {
 
-    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storage\\";
+    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storageFiles\\";
     protected static final File STORAGE_DIR = new File(STORAGE_PATH);
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
