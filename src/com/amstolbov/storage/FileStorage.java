@@ -2,7 +2,7 @@ package com.amstolbov.storage;
 
 import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.Resume;
-import com.amstolbov.storage.serializers.Serializer;
+import com.amstolbov.storage.serializers.StreamSerializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
 
-    protected File directory;
-    private final Serializer serializer;
+    private File directory;
+    private final StreamSerializer streamSerializer;
 
-    public FileStorage(File directory, Serializer serializer) {
+    public FileStorage(File directory, StreamSerializer serializer) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -23,13 +23,13 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.serializer = serializer;
+        this.streamSerializer = serializer;
     }
 
     @Override
     protected void doUpdate(File searchKey, Resume resume) {
         try {
-            serializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(searchKey)));
+            streamSerializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(searchKey)));
         } catch (IOException e) {
             throw new StorageException("Can't update resume", searchKey.getName(), e);
         }
@@ -39,7 +39,7 @@ public class FileStorage extends AbstractStorage<File> {
     protected void doSave(Resume resume, File existPosition) {
         try {
             existPosition.createNewFile();
-            serializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(existPosition)));
+            streamSerializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(existPosition)));
         } catch (IOException e) {
             throw new StorageException("Can't save file", existPosition.getName(), e);
         }
@@ -48,7 +48,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File existPosition) {
         try {
-            return serializer.doRead(new BufferedInputStream(new FileInputStream(existPosition)));
+            return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(existPosition)));
         } catch (IOException e) {
             throw new StorageException("Can't read file storage: ", existPosition.getName());
         }

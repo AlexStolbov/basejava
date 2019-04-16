@@ -5,7 +5,10 @@ import java.util.Objects;
 public class SimpleTextSection extends AbstractSection {
     private static final long serialVersonUID = 1L;
 
-    private final String description;
+    private String description;
+
+    public SimpleTextSection() {
+    }
 
     public SimpleTextSection(String descr) {
         this.description = descr;

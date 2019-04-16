@@ -29,6 +29,7 @@ hs_err_pid*
 
 \target
 \out
+\storage
 
 .idea
 *.iml

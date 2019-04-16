@@ -13,6 +13,10 @@ public class OrganizationSection extends AbstractSection {
         this.organizations.add(org);
     }
 
+    public Set<Organization> getOrganization() {
+        return organizations;
+    }
+
     @Override
     public String toString() {
         return organizations.toString();

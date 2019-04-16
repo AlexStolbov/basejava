@@ -13,6 +13,10 @@ public class ListSection extends AbstractSection {
         parts.add(sectionPart);
     }
 
+    public List<String> getParts() {
+        return parts;
+    }
+
     @Override
     public String toString() {
         return parts.toString();
