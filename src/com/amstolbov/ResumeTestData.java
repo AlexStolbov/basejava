@@ -5,21 +5,43 @@ import com.amstolbov.util.DateUtil;
 
 import java.time.Month;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class ResumeTestData {
+
+    public static final SectionType[] ALL_SECTIONS = SectionType.values();
+    public static final SectionType[] WITHOUT_EXPERIENCE = Stream.of(ALL_SECTIONS)
+            .filter(el -> el != SectionType.EXPERIENCE)
+            .toArray(SectionType[] :: new);
+
     public static void main(String[] args) {
-        ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name ")));
+        ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name "), ALL_SECTIONS));
     }
 
-    public static Resume getResume(String uuid, String fullName) {
+    public static Resume getResume(String uuid, String fullName, SectionType[] includedSection) {
         Resume resume = new Resume(uuid, fullName);
         ResumeTestData.addContacts(resume);
-        ResumeTestData.addObjective(resume);
-        ResumeTestData.addPersonal(resume);
-        ResumeTestData.addAchievement(resume);
-        ResumeTestData.addQualification(resume);
-        ResumeTestData.addExperience(resume);
-        ResumeTestData.addEducation(resume);
+        for (SectionType include : includedSection) {
+            switch (include) {
+                case OBJECTIVE:
+                    ResumeTestData.addObjective(resume);
+                    break;
+                case PERSONAL:
+                    ResumeTestData.addPersonal(resume);
+                    break;
+                case ACHIEVEMENT:
+                    ResumeTestData.addAchievement(resume);
+                    break;
+                case QUALIFICATIONS:
+                    ResumeTestData.addQualification(resume);
+                    break;
+                case EXPERIENCE:
+                    ResumeTestData.addExperience(resume);
+                    break;
+                case EDUCATION:
+                    ResumeTestData.addEducation(resume);
+            }
+        }
         return resume;
     }
 
@@ -54,17 +76,17 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, sectionQualifications);
     }
 
-    private static void  addExperience(Resume resume) {
+    private static void addExperience(Resume resume) {
         OrganizationSection jobs = new OrganizationSection();
         for (int i = 0; i < 2; i++) {
-            Organization org = new Organization(addRandom("Software company"), addRandom("url"));
+            Organization org = new Organization(addRandom("Software company"), i ==1 ? null : addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(1998, 2019);
                 Organization.Experience experience = new Organization.Experience(
                         DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
-                        , addRandom("position")
-                        , addRandom("position description"));
+                        , addRandom(addRandom("position"))
+                        , (y ==1 ? null : addRandom("position description")));
                 org.addExperience(experience);
             }
             jobs.addOrganization(org);

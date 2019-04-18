@@ -21,10 +21,18 @@ public class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
 
-    private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1, "full name 1");
-    private static final Resume RESUME_2 = ResumeTestData.getResume(UUID_2, "full name 2");
-    private static final Resume RESUME_3 = ResumeTestData.getResume(UUID_3, "full name 3");
-    private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4, "full name 4");
+    private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1,
+            "full name 1",
+            ResumeTestData.ALL_SECTIONS);
+    private static final Resume RESUME_2 = ResumeTestData.getResume(UUID_2,
+            "full name 2",
+            ResumeTestData.ALL_SECTIONS);
+    private static final Resume RESUME_3 = ResumeTestData.getResume(UUID_3,
+            "full name 3",
+            ResumeTestData.ALL_SECTIONS);
+    private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4,
+            "full name 4",
+            ResumeTestData.WITHOUT_EXPERIENCE);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -46,7 +54,7 @@ public class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updatedResume = ResumeTestData.getResume(UUID_2, "full name 5");
+        Resume updatedResume = ResumeTestData.getResume(UUID_2, "full name 5", ResumeTestData.ALL_SECTIONS);
         assertNotSame(updatedResume, storage.get(UUID_2));
         storage.update(updatedResume);
         assertThat(storage.get(UUID_2), is(updatedResume));
