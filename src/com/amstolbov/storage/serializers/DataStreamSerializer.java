@@ -1,174 +1,155 @@
 package com.amstolbov.storage.serializers;
 
+import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
 
     @Override
-    public void doWrite(Resume r, OutputStream os) throws IOException {
-        try (DataOutputStream dos = new DataOutputStream(os)) {
-            dos.writeUTF(r.getUuid());
-            dos.writeUTF(r.getFullName());
-            writeContacts(r, dos);
-            dos.writeInt(r.getSections().size());
-            for (Map.Entry<SectionType, AbstractSection> sec : r.getSections().entrySet()) {
-                dos.writeUTF(sec.getKey().toString());
-                switch (sec.getKey()) {
+    public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
+        try (DataOutputStream dos = new DataOutputStream(outputStream)) {
+            dos.writeUTF(resume.getUuid());
+            dos.writeUTF(resume.getFullName());
+            writeContacts(resume, dos);
+            writeCollection(resume.getSections().entrySet(), dos, el -> {
+                dos.writeUTF(el.getKey().toString());
+                switch (el.getKey()) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        writeSimpleTextSection(sec.getValue(), dos);
+                        dos.writeUTF(el.getValue().toString());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeListSection(sec.getValue(), dos);
+                        writeCollection(((ListSection) el.getValue()).getParts(), dos, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeOrganizationSection(sec.getValue(), dos);
+                        writeOrganizationSection(el.getValue(), dos);
                 }
-            }
+            });
         }
     }
 
-    @Override
-    public Resume doRead(InputStream is) throws IOException {
-        try (DataInputStream dis = new DataInputStream(is)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
-            readContacts(dis, resume);
-            int sectionsCount = dis.readInt();
-            for (int i = 0; i < sectionsCount; i++) {
-                readSection(dis, resume);
-            }
-            return resume;
-        }
-    }
-
-    private void writeContacts(Resume r, DataOutputStream dos) throws IOException {
-        writeCollection(r.getContacts().entrySet(), dos,
+    private void writeContacts(Resume resume, DataOutputStream dos) throws IOException {
+        writeCollection(resume.getContacts().entrySet(), dos,
                 el -> {
                     dos.writeUTF(el.getKey().name());
                     dos.writeUTF(el.getValue());
                 });
     }
 
-    private void writeSimpleTextSection(AbstractSection sts, DataOutputStream dos) throws IOException {
-        dos.writeUTF(sts.toString());
-    }
-
-    private void writeListSection(AbstractSection sts, DataOutputStream dos) throws IOException {
-        writeCollection(((ListSection) sts).getParts(), dos, dos::writeUTF);
-    }
-
-    private void writeOrganizationSection(AbstractSection sts, DataOutputStream dos) throws IOException {
-        writeCollection(((OrganizationSection) sts).getOrganization(), dos,
+    private void writeOrganizationSection(AbstractSection abstractSection, DataOutputStream dos) throws IOException {
+        writeCollection(((OrganizationSection) abstractSection).getOrganization(), dos,
                 el -> {
                     dos.writeUTF(el.getName());
-                    dos.writeUTF(convertNull(el.getUrl()));
+                    dos.writeUTF(nullableToWrite(el.getUrl()));
                     writeExperiences(el, dos);
                 });
     }
 
-    private void writeExperiences(Organization org, DataOutputStream dos) throws IOException {
-        writeCollection(org.getExperiences(),
+    private void writeExperiences(Organization organization, DataOutputStream dos) throws IOException {
+        writeCollection(organization.getExperiences(),
                 dos, el -> {
                     dos.writeUTF(el.getDateStart().toString());
                     dos.writeUTF(el.getDateFinish().toString());
                     dos.writeUTF(el.getPosition());
-                    dos.writeUTF(convertNull(el.getDescription()));
+                    dos.writeUTF(nullableToWrite(el.getDescription()));
                 });
     }
 
-    private <T> void writeCollection(Collection<T> coll, DataOutputStream dos, ConsumerException<T> toDo) throws IOException {
-        dos.writeInt(coll.size());
-        for (T element : coll) {
+    private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, WritingConsumerException<T> toDo) throws IOException {
+        dos.writeInt(collection.size());
+        for (T element : collection) {
             toDo.accept(element);
         }
     }
 
-    private interface ConsumerException<T> {
+    private interface WritingConsumerException<T> {
         void accept(T t) throws IOException;
     }
 
-    private void readContacts(DataInputStream dis, Resume resume) throws IOException {
+    private String nullableToWrite(String converted) {
+        if (converted == null) {
+            return "";
+        }
+        return converted;
+    }
+
+    @Override
+    public Resume doRead(InputStream inputStream) throws IOException {
+        try (DataInputStream dis = new DataInputStream(inputStream)) {
+            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
+            readSectionsBlock(dis, resume, (elDis, elResume) -> elResume.addContact(ContactType.valueOf(elDis.readUTF()), elDis.readUTF()));
+            readSectionsBlock(dis, resume, (elDis, elResume) -> {
+                SectionType currentSectionType = SectionType.valueOf(dis.readUTF());
+                elResume.addSection(currentSectionType, readSection(elDis, currentSectionType));
+            });
+            return resume;
+        }
+    }
+
+    private void readSectionsBlock(DataInputStream dis, Resume resume, ReadBlock readBlock) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+            readBlock.accept(dis, resume);
         }
     }
 
-    private void readSection(DataInputStream dis, Resume resume) throws IOException {
-        String sectionName = dis.readUTF();
-        SectionType currentSectionType = SectionType.valueOf(sectionName);
-        switch (currentSectionType) {
+    private AbstractSection readSection(DataInputStream dis, SectionType sectionType) throws IOException {
+        switch (sectionType) {
             case OBJECTIVE:
             case PERSONAL:
-                readSimpleTextSection(dis, resume, currentSectionType);
-                break;
+                return new SimpleTextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                readListSection(dis, resume, currentSectionType);
-                break;
+                return readCollection(dis, new ListSection(), ((el1, el2) -> el2.addSectionPart(el1.readUTF())));
             case EXPERIENCE:
             case EDUCATION:
-                readOrganizationSection(dis, resume, currentSectionType);
+                return readOrganizationSection(dis);
+            default: throw new StorageException("", "");
         }
     }
 
-    private void readSimpleTextSection(DataInputStream dis, Resume resume, SectionType st) throws IOException {
-        resume.addSection(st, new SimpleTextSection(dis.readUTF()));
-    }
-
-    private void readListSection(DataInputStream dis, Resume resume, SectionType st) throws IOException {
-        ListSection sts = new ListSection();
-        readCollection(dis, sts, ((el1, el2) -> el2.addSectionPart(el1.readUTF())));
-        resume.addSection(st, sts);
-    }
-
-    private void readOrganizationSection(DataInputStream dis, Resume resume, SectionType st) throws IOException {
-        OrganizationSection os = new OrganizationSection();
-        readCollection(dis, os, ((el1, el2) -> {
-            Organization org = new Organization(el1.readUTF(), convertNull(el1.readUTF()));
-            readExperiences(el1, org);
-            el2.addOrganization(org);
+    private OrganizationSection readOrganizationSection(DataInputStream dis) throws IOException {
+        return readCollection(dis, new OrganizationSection(), ((el1, el2) -> {
+            Organization org = new Organization(el1.readUTF(), readNullable(el1.readUTF()));
+            el2.addOrganization(readExperiences(el1, org));
         }));
-        resume.addSection(st, os);
     }
 
-    private void readExperiences(DataInputStream dis, Organization org) throws IOException {
-        readCollection(dis, org, ((el1, el2) -> {
+    private Organization readExperiences(DataInputStream dis, Organization organization) throws IOException {
+        return readCollection(dis, organization, ((el1, el2) -> {
             Organization.Experience exp = new Organization.Experience(
                     LocalDate.parse(el1.readUTF()),
                     LocalDate.parse(el1.readUTF()),
                     el1.readUTF(),
-                    convertNull(el1.readUTF()));
+                    readNullable(el1.readUTF()));
             el2.addExperience(exp);
         }));
     }
 
-    private <T> void readCollection(DataInputStream dis, T st, DisConsumerException<T> cons) throws IOException {
+    private <T> T readCollection(DataInputStream dis, T collectionOwner, ReadingConsumerException<T> cons) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            cons.accept(dis, st);
+            cons.accept(dis, collectionOwner);
         }
+        return collectionOwner;
     }
 
-    private interface DisConsumerException<T> {
-        void accept(DataInputStream t, T u) throws IOException;
+    private interface ReadBlock {
+        void accept(DataInputStream t, Resume resume) throws IOException;
     }
 
-    private String convertNull(String converted) {
-        String nullString = "<<null>>";
-        if (converted == null) {
-            return nullString;
-        }
-        if (converted.equals(nullString)) {
+    private interface ReadingConsumerException<T> {
+        void accept(DataInputStream t, T sectionType) throws IOException;
+    }
+
+    private String readNullable(String converted) {
+        if (converted.equals("")) {
             return null;
         }
         return converted;
