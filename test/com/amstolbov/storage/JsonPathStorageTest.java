@@ -4,6 +4,6 @@ import com.amstolbov.storage.serializers.JsonStreamSerializer;
 
 public class JsonPathStorageTest extends AbstractStorageTest{
     public JsonPathStorageTest() {
-        super(new PathStorage(AbstractStorage.STORAGE_PATH, new JsonStreamSerializer()));
+        super(new PathStorage(AbstractStorageTest.STORAGE_PATH, new JsonStreamSerializer()));
     }
 }

@@ -7,6 +7,7 @@ import com.amstolbov.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class AbstractStorageTest {
     private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4,
             "full name 4",
             ResumeTestData.WITHOUT_EXPERIENCE);
+
+    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storageFiles\\";
+    protected static final File STORAGE_DIR = new File(STORAGE_PATH);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;

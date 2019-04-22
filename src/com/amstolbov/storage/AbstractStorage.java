@@ -4,15 +4,12 @@ import com.amstolbov.exception.ExistStorageException;
 import com.amstolbov.exception.NotExistStorageException;
 import com.amstolbov.model.Resume;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractStorage<SK> implements Storage {
 
-    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storageFiles\\";
-    protected static final File STORAGE_DIR = new File(STORAGE_PATH);
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
