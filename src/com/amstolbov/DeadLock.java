@@ -25,21 +25,21 @@ public class DeadLock {
 
     private void doAnyThing() {
         try {
-            Thread.sleep(1);
+            Thread.sleep(0);
         } catch (InterruptedException e){};
     }
 
     public static void main(String[] args) {
         DeadLock monitorOne = new DeadLock("MonitorOne");
         DeadLock monitorTwo = new DeadLock("MonitorTwo");
+        createThread(monitorOne, monitorTwo, "one thread finish");
+        createThread(monitorTwo, monitorOne, "two thread finish");
+    }
+
+    private static void createThread(DeadLock monitorOne, DeadLock monitorTwo, String message) {
         new Thread(() -> {
             monitorOne.doOne(monitorTwo);
-            System.out.println("one finish");
-        }).start();
-
-        new Thread(() -> {
-            monitorTwo.doOne(monitorOne);
-            System.out.println("two finish");
+            System.out.println(message);
         }).start();
     }
 }
