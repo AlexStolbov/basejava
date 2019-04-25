@@ -36,7 +36,7 @@ public class MainStream {
         Predicate<Integer> predicate = (s1 -> s1 % 2 != 0);
         int countOdd = (int) integers.stream().filter(predicate).count();
         if (predicate.test(countOdd)) {
-            predicate = (s1 -> s1 % 2 == 0);
+            predicate = predicate.negate();
         }
         return integers.stream()
                 .filter(predicate)
