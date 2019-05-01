@@ -2,6 +2,7 @@ package com.amstolbov;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -44,25 +45,13 @@ public class MainStream {
     }
 
     private static List<Integer> oddOrEvenOneStream(List<Integer> integers) {
-        SummatorInt summatorInt = new SummatorInt();
+        AtomicInteger atomicInteger = new AtomicInteger(0);
         return integers.stream()
-                .peek(s1 -> summatorInt.add(s1))
+                .peek(s1 -> atomicInteger.addAndGet(s1))
                 .collect(Collectors.toList())
                 .stream()
-                .filter(s1 -> (summatorInt.get() % 2 == 0) == (s1 % 2 != 0))
+                .filter(s1 -> (atomicInteger.get() % 2 == 0) == (s1 % 2 != 0))
                 .collect(Collectors.toList());
-    }
-
-    private static class SummatorInt {
-        int val = 0;
-
-        void add(int val) {
-            this.val = val + 1;
-        }
-
-        int get() {
-            return this.val;
-        }
     }
 
 }
