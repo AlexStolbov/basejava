@@ -13,6 +13,9 @@ public class ResumeTestData {
     public static final SectionType[] WITHOUT_EXPERIENCE = Stream.of(ALL_SECTIONS)
             .filter(el -> el != SectionType.EXPERIENCE)
             .toArray(SectionType[] :: new);
+    public static final SectionType[] WITHOUT_SECTIONS = Stream.of(ALL_SECTIONS)
+            .filter(el -> false)
+            .toArray(SectionType[] :: new);
 
     public static void main(String[] args) {
         ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name "), ALL_SECTIONS));
@@ -20,7 +23,11 @@ public class ResumeTestData {
 
     public static Resume getResume(String uuid, String fullName, SectionType[] includedSection) {
         Resume resume = new Resume(uuid, fullName);
-        ResumeTestData.addContacts(resume);
+
+        if (includedSection != WITHOUT_SECTIONS) {
+            ResumeTestData.addContacts(resume);
+        }
+
         for (SectionType include : includedSection) {
             switch (include) {
                 case OBJECTIVE:

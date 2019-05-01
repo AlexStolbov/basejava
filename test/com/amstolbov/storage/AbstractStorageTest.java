@@ -1,5 +1,6 @@
 package com.amstolbov.storage;
 
+import com.amstolbov.Config;
 import com.amstolbov.ResumeTestData;
 import com.amstolbov.exception.ExistStorageException;
 import com.amstolbov.exception.NotExistStorageException;
@@ -24,18 +25,22 @@ public class AbstractStorageTest {
 
     private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1,
             "full name 1",
-            ResumeTestData.ALL_SECTIONS);
+            //ResumeTestData.ALL_SECTIONS);
+            ResumeTestData.WITHOUT_SECTIONS);
     private static final Resume RESUME_2 = ResumeTestData.getResume(UUID_2,
             "full name 2",
-            ResumeTestData.ALL_SECTIONS);
+            //ResumeTestData.ALL_SECTIONS);
+            ResumeTestData.WITHOUT_SECTIONS);
     private static final Resume RESUME_3 = ResumeTestData.getResume(UUID_3,
             "full name 3",
-            ResumeTestData.ALL_SECTIONS);
+            //ResumeTestData.ALL_SECTIONS);
+            ResumeTestData.WITHOUT_SECTIONS);
     private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4,
             "full name 4",
-            ResumeTestData.WITHOUT_EXPERIENCE);
+            //ResumeTestData.WITHOUT_EXPERIENCE);
+            ResumeTestData.WITHOUT_SECTIONS);
 
-    protected static final String STORAGE_PATH = "E:\\Java\\IdeaProjects\\basejava\\storageFiles\\";
+    protected static final String STORAGE_PATH = Config.get().getParam(Config.ParamType.STORAGE_DIR);
     protected static final File STORAGE_DIR = new File(STORAGE_PATH);
 
     protected AbstractStorageTest(Storage storage) {
@@ -58,7 +63,10 @@ public class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updatedResume = ResumeTestData.getResume(UUID_2, "full name 5", ResumeTestData.ALL_SECTIONS);
+        Resume updatedResume = ResumeTestData.getResume(UUID_2,
+                "full name 5",
+                //ResumeTestData.ALL_SECTIONS);
+                ResumeTestData.WITHOUT_SECTIONS);
         assertNotSame(updatedResume, storage.get(UUID_2));
         storage.update(updatedResume);
         assertThat(storage.get(UUID_2), is(updatedResume));
@@ -73,7 +81,8 @@ public class AbstractStorageTest {
     public void save() {
         storage.save(RESUME_4);
         assertEquals(4, storage.size());
-        assertEquals(RESUME_4, storage.get(UUID_4));
+        Resume rr = storage.get(UUID_4);
+        assertEquals(RESUME_4, rr);
     }
 
     @Test(expected = ExistStorageException.class)
