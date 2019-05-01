@@ -62,7 +62,7 @@ public class MainStream {
                             b1.addAll(b2);
                             return b1;
                         },
-                        total -> total.stream().filter(s1 -> (atomicInteger.get() % 2 == 0) == (s1 % 2 != 0))
+                        total -> total.stream().filter(s1 -> (atomicInteger.get() % 2 != s1 % 2))
                                 .collect(Collectors.toList())
                 )
         );
