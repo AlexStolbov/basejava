@@ -7,12 +7,13 @@ import com.amstolbov.sql.ConnectionFactory;
 import com.amstolbov.sql.SqlHelper;
 
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
-    public final ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     public SqlStorage(final String dbUrl, final String dbUser, final String dbPassword) {
@@ -54,7 +55,7 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         checkExist(uuid);
-        String fullName = (String) SqlHelper.executeSqlParamsResult(connectionFactory,
+        String fullName = SqlHelper.executeSqlParamsResult(connectionFactory,
                 "SELECT r.full_name full_name FROM resume r WHERE r.uuid = ?",
                 ps -> ps.setString(1, uuid),
                 rs -> {
@@ -76,8 +77,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-
-        return  (List<Resume>) SqlHelper.executeSqlResult(connectionFactory,
+        return  SqlHelper.executeSqlResult(connectionFactory,
                 "SELECT r.uuid uuid, r.full_name full_name FROM resume r ORDER BY r.uuid",
                 rs -> {
                     ArrayList<Resume> result = new ArrayList<>();
@@ -90,7 +90,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return (int) SqlHelper.executeSqlResult(connectionFactory,
+        return SqlHelper.executeSqlResult(connectionFactory,
                 "SELECT COUNT(*) size FROM resume",
                 rs -> {
                     rs.next();
@@ -111,15 +111,9 @@ public class SqlStorage implements Storage {
     }
 
     private boolean uuidIsExist(String uuid) {
-        return (boolean) SqlHelper.executeSqlParamsResult(connectionFactory,
+        return SqlHelper.executeSqlParamsResult(connectionFactory,
                 "SELECT * FROM resume WHERE uuid = ?",
                 ps -> ps.setString(1, uuid),
-                rs -> {
-                    if (rs.next()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
+                ResultSet::next);
     }
 }

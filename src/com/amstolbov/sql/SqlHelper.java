@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class SqlHelper {
 
-    public static Object executeSqlParamsResult(ConnectionFactory connectionFactory,
+    public static <T> T executeSqlParamsResult(ConnectionFactory connectionFactory,
                                                 String sqlStatement,
                                                 ConsumerException setParameters,
-                                                FunctionalException<Object> getResult) {
+                                                FunctionalException<T> getResult) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlStatement)) {
             setParameters.accept(ps);
@@ -31,9 +31,9 @@ public class SqlHelper {
                 rs -> null);
     }
 
-    public static Object executeSqlResult(ConnectionFactory connectionFactory,
+    public static <T> T executeSqlResult(ConnectionFactory connectionFactory,
                                         String sqlStatement,
-                                        FunctionalException<Object> getResult) {
+                                        FunctionalException<T> getResult) {
         return executeSqlParamsResult(connectionFactory,
                 sqlStatement,
                 ps -> {},
