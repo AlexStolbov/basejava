@@ -1,8 +1,8 @@
 package com.amstolbov.sql;
 
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public interface FunctionalException<T>{
-    T apply(ResultSet resultSet) throws SQLException;
+    T apply(PreparedStatement ps) throws SQLException;
 }
