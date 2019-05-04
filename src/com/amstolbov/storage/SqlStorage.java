@@ -32,67 +32,65 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        int updated = sqlHelper.executeSql("UPDATE resume SET full_name=? WHERE uuid=?",
+        sqlHelper.executeSql("UPDATE resume SET full_name=? WHERE uuid=?",
                 ps -> {
                     ps.setString(1, resume.getFullName());
                     ps.setString(2, uuid);
-                    return ps.executeUpdate();
+                    if (ps.executeUpdate() == 0) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    return null;
                 });
-        if (updated == 0) {
-            throw new NotExistStorageException(uuid);
-        }
+
         LOG.info("Update resume " + uuid);
     }
 
     @Override
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-        int inserted = sqlHelper.executeSql("INSERT INTO resume(uuid, full_name) VALUES (?, ?)",
+        sqlHelper.executeSql("INSERT INTO resume(uuid, full_name) VALUES (?, ?)",
                 ps -> {
                     ps.setString(1, uuid);
                     ps.setString(2, resume.getFullName());
                     try {
                         return ps.executeUpdate();
                     } catch (SQLException e) {
-                        throw new ExistStorageException(uuid);
+                        if (e.getSQLState().equals("23505")) {
+                            throw new ExistStorageException(uuid);
+                        } else {
+                            throw new StorageException(e);
+                        }
                     }
                 });
-        if (inserted == 0) {
-            throw new StorageException("Error save resume", uuid);
-        }
         LOG.info("Clear storage");
     }
 
     @Override
     public Resume get(String uuid) {
-        String fullName = sqlHelper.executeSql("SELECT r.full_name full_name FROM resume r WHERE r.uuid = ?",
+        return sqlHelper.executeSql("SELECT r.full_name full_name FROM resume r WHERE r.uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
                     ps.executeQuery();
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
-                        return rs.getString("full_name");
+                        return new Resume(uuid, rs.getString("full_name"));
                     }
-                    return "";
+                    throw new NotExistStorageException(uuid);
                 }
         );
-        if (fullName.equals("")) {
-            throw new NotExistStorageException(uuid);
-        }
-        return new Resume(uuid, fullName);
-
     }
 
     @Override
     public void delete(String uuid) {
-        int deleted = sqlHelper.executeSql("DELETE FROM resume WHERE uuid = ?",
+        sqlHelper.executeSql("DELETE FROM resume WHERE uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
-                    return ps.executeUpdate();
+                    if (ps.executeUpdate() == 0) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    return null;
                 });
-        if (deleted == 0) {
-            throw new NotExistStorageException(uuid);
-        }
+
         LOG.info("Delete resume " + uuid);
     }
 
@@ -100,7 +98,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.executeSql("SELECT r.uuid uuid, r.full_name full_name FROM resume r ORDER BY r.uuid",
                 ps -> {
-                    ArrayList<Resume> result = new ArrayList<>();
+                    List<Resume> result = new ArrayList<>();
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         result.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
