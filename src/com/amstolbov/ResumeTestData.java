@@ -12,10 +12,9 @@ public class ResumeTestData {
     public static final SectionType[] ALL_SECTIONS = SectionType.values();
     public static final SectionType[] WITHOUT_EXPERIENCE = Stream.of(ALL_SECTIONS)
             .filter(el -> el != SectionType.EXPERIENCE)
-            .toArray(SectionType[] :: new);
-    public static final SectionType[] WITHOUT_SECTIONS = Stream.of(ALL_SECTIONS)
-            .filter(el -> false)
-            .toArray(SectionType[] :: new);
+            .toArray(SectionType[]::new);
+    public static final SectionType[] WITHOUT_CONTACTS_SECTIONS = new SectionType[0];
+    public static final SectionType[] ONLY_CONTACTS = new SectionType[0];
 
     public static void main(String[] args) {
         ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name "), ALL_SECTIONS));
@@ -24,7 +23,7 @@ public class ResumeTestData {
     public static Resume getResume(String uuid, String fullName, SectionType[] includedSection) {
         Resume resume = new Resume(uuid, fullName);
 
-        if (includedSection != WITHOUT_SECTIONS) {
+        if (includedSection != WITHOUT_CONTACTS_SECTIONS) {
             ResumeTestData.addContacts(resume);
         }
 
@@ -86,14 +85,14 @@ public class ResumeTestData {
     private static void addExperience(Resume resume) {
         OrganizationSection jobs = new OrganizationSection();
         for (int i = 0; i < 2; i++) {
-            Organization org = new Organization(addRandom("Software company"), i ==1 ? null : addRandom("url"));
+            Organization org = new Organization(addRandom("Software company"), i == 1 ? null : addRandom("url"));
             for (int y = 0; y < 2; y++) {
                 int border = randomFromRange(1998, 2019);
                 Organization.Experience experience = new Organization.Experience(
                         DateUtil.of(randomFromRange(1998, border), Month.values()[randomFromRange(0, 11)])
                         , DateUtil.of(randomFromRange(border, 2019), Month.values()[randomFromRange(0, 11)])
                         , addRandom(addRandom("position"))
-                        , (y ==1 ? null : addRandom("position description")));
+                        , (y == 1 ? null : addRandom("position description")));
                 org.addExperience(experience);
             }
             jobs.addOrganization(org);

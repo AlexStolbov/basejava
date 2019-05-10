@@ -5,6 +5,7 @@ import com.amstolbov.ResumeTestData;
 import com.amstolbov.exception.ExistStorageException;
 import com.amstolbov.exception.NotExistStorageException;
 import com.amstolbov.model.Resume;
+import com.amstolbov.model.SectionType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,23 +23,20 @@ public class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
+    private static final SectionType[] fillSections = ResumeTestData.ONLY_CONTACTS;
 
     private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1,
             "full name 1",
-            //ResumeTestData.ALL_SECTIONS);
-            ResumeTestData.WITHOUT_SECTIONS);
+            fillSections);
     private static final Resume RESUME_2 = ResumeTestData.getResume(UUID_2,
             "full name 2",
-            //ResumeTestData.ALL_SECTIONS);
-            ResumeTestData.WITHOUT_SECTIONS);
+            fillSections);
     private static final Resume RESUME_3 = ResumeTestData.getResume(UUID_3,
             "full name 3",
-            //ResumeTestData.ALL_SECTIONS);
-            ResumeTestData.WITHOUT_SECTIONS);
+            fillSections);
     private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4,
             "full name 4",
-            //ResumeTestData.WITHOUT_EXPERIENCE);
-            ResumeTestData.WITHOUT_SECTIONS);
+            fillSections);
 
     protected static final String STORAGE_PATH = Config.get().getParam(Config.ParamType.STORAGE_DIR);
     protected static final File STORAGE_DIR = new File(STORAGE_PATH);
@@ -65,8 +63,7 @@ public class AbstractStorageTest {
     public void update() {
         Resume updatedResume = ResumeTestData.getResume(UUID_2,
                 "full name 5",
-                //ResumeTestData.ALL_SECTIONS);
-                ResumeTestData.WITHOUT_SECTIONS);
+                fillSections);
         assertNotSame(updatedResume, storage.get(UUID_2));
         storage.update(updatedResume);
         assertThat(storage.get(UUID_2), is(updatedResume));
