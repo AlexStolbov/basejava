@@ -10,22 +10,23 @@ import java.util.stream.Stream;
 public class ResumeTestData {
 
     public static final SectionType[] ALL_SECTIONS = SectionType.values();
+    public static final SectionType[] WITHOUT_ALL_SECTIONS = {};
     public static final SectionType[] WITHOUT_EXPERIENCE = Stream.of(ALL_SECTIONS)
             .filter(el -> el != SectionType.EXPERIENCE)
             .toArray(SectionType[]::new);
-    public static final SectionType[] WITHOUT_CONTACTS_SECTIONS = new SectionType[0];
-    public static final SectionType[] ONLY_CONTACTS = new SectionType[0];
+
+    public static final ContactType[] ALL_CONTACTS = ContactType.values();
+    public static final ContactType[] WITHOUT_ALL_CONTACTS = {};
+    public static final ContactType[] ONLY_PHONE = {ContactType.PHONE};
 
     public static void main(String[] args) {
-        ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name "), ALL_SECTIONS));
+        ResumeTestData.printTest(ResumeTestData.getResume(addRandom(""), addRandom("Resume name "), ALL_CONTACTS, ALL_SECTIONS));
     }
 
-    public static Resume getResume(String uuid, String fullName, SectionType[] includedSection) {
+    public static Resume getResume(String uuid, String fullName, ContactType[] includeContacts, SectionType[] includedSection) {
         Resume resume = new Resume(uuid, fullName);
 
-        if (includedSection != WITHOUT_CONTACTS_SECTIONS) {
-            ResumeTestData.addContacts(resume);
-        }
+        ResumeTestData.addContacts(resume, includeContacts);
 
         for (SectionType include : includedSection) {
             switch (include) {
@@ -51,9 +52,12 @@ public class ResumeTestData {
         return resume;
     }
 
-    private static void addContacts(Resume resume) {
-        resume.addContact(ContactType.PHONE, addRandom("phone number"));
-        resume.addContact(ContactType.SKYPE, addRandom("skype number"));
+    private static void addContacts(Resume resume, ContactType[] includeContacts) {
+        for (ContactType addContact : includeContacts) {
+            resume.addContact(addContact, addRandom(addContact.getTitle() + " "));
+        }
+//        resume.addContact(ContactType.PHONE, addRandom("phone number"));
+//        resume.addContact(ContactType.SKYPE, addRandom("skype number"));
     }
 
     private static void addObjective(Resume resume) {

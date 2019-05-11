@@ -1,13 +1,13 @@
 package com.amstolbov.model;
 
 public enum ContactType {
-    PHONE("Phone."),
-    SKYPE("Skype"),
+    PHONE("phone."),
+    SKYPE("skype"),
     EMAIL("email"),
-    LINKEDIN(""),
-    GITHUB(""),
-    STACKOVERFLOW(""),
-    HOME("");
+    LINKEDIN("linkedin"),
+    GITHUB("github"),
+    STACKOVERFLOW("stackoverflow"),
+    HOME("home");
 
     private String title;
 

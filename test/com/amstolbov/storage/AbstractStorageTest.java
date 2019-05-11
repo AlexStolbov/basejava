@@ -23,19 +23,23 @@ public class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    private static final SectionType[] fillSections = ResumeTestData.ONLY_CONTACTS;
+    private static final SectionType[] fillSections = ResumeTestData.WITHOUT_ALL_SECTIONS;
 
     private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1,
             "full name 1",
+            ResumeTestData.ALL_CONTACTS,
             fillSections);
     private static final Resume RESUME_2 = ResumeTestData.getResume(UUID_2,
             "full name 2",
+            ResumeTestData.ALL_CONTACTS,
             fillSections);
     private static final Resume RESUME_3 = ResumeTestData.getResume(UUID_3,
             "full name 3",
+            ResumeTestData.ALL_CONTACTS,
             fillSections);
     private static final Resume RESUME_4 = ResumeTestData.getResume(UUID_4,
             "full name 4",
+            ResumeTestData.WITHOUT_ALL_CONTACTS,
             fillSections);
 
     protected static final String STORAGE_PATH = Config.get().getParam(Config.ParamType.STORAGE_DIR);
@@ -63,6 +67,7 @@ public class AbstractStorageTest {
     public void update() {
         Resume updatedResume = ResumeTestData.getResume(UUID_2,
                 "full name 5",
+                ResumeTestData.ONLY_PHONE,
                 fillSections);
         assertNotSame(updatedResume, storage.get(UUID_2));
         storage.update(updatedResume);
