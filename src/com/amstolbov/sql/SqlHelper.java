@@ -14,7 +14,7 @@ public class SqlHelper {
         this.connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
-    public <T> T executeSql(String sqlStatement, FunctionalException<T, PreparedStatement> getResult) {
+    public <T> T executeSql(String sqlStatement, FunctionalException<T> getResult) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlStatement)) {
             return getResult.apply(ps);
