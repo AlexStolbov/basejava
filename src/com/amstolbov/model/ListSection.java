@@ -26,11 +26,7 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (String part : parts) {
-            result.append(part).append("\n");
-        }
-        return result.toString();
+        return String.join("\n", parts);
     }
 
     public void addFromString(String oneString) {

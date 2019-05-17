@@ -1,8 +1,8 @@
 package com.amstolbov.storage;
 
 import com.amstolbov.exception.NotExistStorageException;
+import com.amstolbov.exception.StorageException;
 import com.amstolbov.model.*;
-import com.amstolbov.sql.FunctionalException;
 import com.amstolbov.sql.SqlHelper;
 
 import java.sql.Connection;
@@ -40,19 +40,17 @@ public class SqlStorage implements Storage {
                             throw new NotExistStorageException(uuid);
                         }
                     }
-                    clearTable(conn, "contact", uuid);
+                    removeDependent(conn, "contact", uuid);
                     saveContacts(resume, conn);
-                    clearTable(conn, "simplesection", uuid);
-                    saveSimpleSections(resume, conn);
-                    clearTable(conn, "listsection", uuid);
-                    saveListSections(resume, conn);
+                    removeDependent(conn, "resumesection", uuid);
+                    saveSections(resume, conn);
                     return null;
                 }
         );
         LOG.info("Update resume " + uuid);
     }
 
-    private void clearTable(Connection conn, String tableName, String uuid) throws SQLException {
+    private void removeDependent(Connection conn, String tableName, String uuid) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tableName + " WHERE resume_uuid = ?")) {
             ps.setString(1, uuid);
             ps.executeUpdate();
@@ -62,7 +60,6 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-
         sqlHelper.executeTransaction(conn -> {
                     try (PreparedStatement ps = conn.prepareStatement("" +
                             "INSERT INTO resume(uuid, full_name) VALUES (?, ?)")) {
@@ -71,8 +68,7 @@ public class SqlStorage implements Storage {
                         ps.executeUpdate();
                     }
                     saveContacts(resume, conn);
-                    saveSimpleSections(resume, conn);
-                    saveListSections(resume, conn);
+                    saveSections(resume, conn);
                     return null;
                 }
         );
@@ -92,30 +88,14 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void saveSimpleSections(Resume resume, Connection conn) throws SQLException {
-        saveTable(resume
-                , conn
-                , "INSERT INTO simplesection(resume_uuid, type, description) VALUES (?, ?, ?)"
-                , Arrays.asList(SectionType.PERSONAL, SectionType.OBJECTIVE));
-    }
-
-    private void saveListSections(Resume resume, Connection conn) throws SQLException {
-        saveTable(resume
-                , conn
-                , "INSERT INTO listsection(resume_uuid, type, part) VALUES (?, ?, ?)"
-                , Arrays.asList(SectionType.ACHIEVEMENT, SectionType.QUALIFICATIONS));
-    }
-
-    private void saveTable(Resume resume, Connection conn, String queryText, List<SectionType> sections) throws SQLException {
-        String uuid = resume.getUuid();
-        try (PreparedStatement ps = conn.prepareStatement(queryText)) {
+    private void saveSections(Resume resume, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("" +
+                "INSERT INTO resumesection(resume_uuid, type, description) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, AbstractSection> el : resume.getSections().entrySet()) {
-                if (sections.contains(el.getKey())) {
-                    ps.setString(1, uuid);
-                    ps.setString(2, el.getKey().name());
-                    ps.setString(3, el.getValue().toString());
-                    ps.addBatch();
-                }
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, el.getKey().name());
+                ps.setString(3, el.getValue().toString());
+                ps.addBatch();
             }
             ps.executeBatch();
         }
@@ -168,15 +148,9 @@ public class SqlStorage implements Storage {
                     }
                     Map<String, Map<SectionType, AbstractSection>> sections = new HashMap<>();
                     selectSection(conn,
-                            "SELECT resume_uuid, type, description FROM simplesection " + where,
+                            where,
                             uuidFilter,
-                            sections,
-                            (rs -> new SimpleTextSection(rs.getString("description"))));
-                    selectSection(conn,
-                            "SELECT resume_uuid, type, part FROM listsection " + where,
-                            uuidFilter,
-                            sections,
-                            (rs -> new ListSection(rs.getString("part"))));
+                            sections);
                     List<Resume> result = new ArrayList<>();
                     try (PreparedStatement ps = conn.prepareStatement("" +
                             "SELECT uuid, full_name FROM resume " + whereR + " ORDER BY uuid")) {
@@ -197,11 +171,10 @@ public class SqlStorage implements Storage {
     }
 
     private void selectSection(Connection conn,
-                               String queryText,
+                               String where,
                                String uuidFilter,
-                               Map<String, Map<SectionType, AbstractSection>> sections,
-                               FunctionalException<AbstractSection, ResultSet> getSection) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(queryText)) {
+                               Map<String, Map<SectionType, AbstractSection>> sections) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("SELECT resume_uuid, type, description FROM resumesection " + where)) {
             if (uuidFilter != null) {
                 ps.setString(1, uuidFilter);
             }
@@ -209,8 +182,22 @@ public class SqlStorage implements Storage {
             while (rs.next()) {
                 String uuid = rs.getString("resume_uuid").trim();
                 sections.put(uuid, sections.computeIfAbsent(uuid, key -> new EnumMap(SectionType.class)));
-                sections.get(uuid).put(SectionType.valueOf(rs.getString("type")), getSection.apply(rs));
+                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+                sections.get(uuid).put(sectionType, createSection(sectionType, rs.getString("description")));
             }
+        }
+    }
+
+    private AbstractSection createSection(SectionType sectionType, String description) {
+        switch (sectionType) {
+            case OBJECTIVE:
+            case PERSONAL:
+                return new SimpleTextSection(description);
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                return new ListSection(description);
+            default:
+                throw new StorageException("", "");
         }
     }
 
