@@ -11,8 +11,8 @@ public class ResumeTestData {
 
     public static final SectionType[] ALL_SECTIONS = SectionType.values();
     public static final SectionType[] WITHOUT_ALL_SECTIONS = {};
-    public static final SectionType[] WITHOUT_EXPERIENCE = Stream.of(ALL_SECTIONS)
-            .filter(el -> el != SectionType.EXPERIENCE)
+    public static final SectionType[] WITHOUT_ORGANIZATION = Stream.of(ALL_SECTIONS)
+            .filter(el -> el != SectionType.EXPERIENCE && el != SectionType.EDUCATION)
             .toArray(SectionType[]::new);
 
     public static final ContactType[] ALL_CONTACTS = ContactType.values();

@@ -6,8 +6,15 @@ import java.util.Objects;
 
 public class ListSection extends AbstractSection {
     private static final long serialVersonUID = 1L;
-
     private final List<String> parts = new ArrayList<>();
+
+    public ListSection() {
+
+    }
+
+    public ListSection(String parts) {
+        addFromString(parts);
+    }
 
     public void addSectionPart(String sectionPart) {
         parts.add(sectionPart);
@@ -19,7 +26,18 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return parts.toString();
+        StringBuilder result = new StringBuilder();
+        for (String part : parts) {
+            result.append(part).append("\n");
+        }
+        return result.toString();
+    }
+
+    public void addFromString(String oneString) {
+        String[] res = oneString.split("\n");
+        for (String s : res) {
+            addSectionPart(s);
+        }
     }
 
     @Override

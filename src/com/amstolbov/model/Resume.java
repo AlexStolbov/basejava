@@ -51,11 +51,19 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public void addContacts(Map<ContactType, String> contacts) {
-        this.contacts.putAll(contacts);
+        if (contacts != null) {
+            this.contacts.putAll(contacts);
+        }
     }
 
     public void addSection(SectionType type, AbstractSection section) {
-        sections.put(type, section);
+        this.sections.put(type, section);
+    }
+
+    public void addSections(Map<SectionType, AbstractSection> sections) {
+        if (sections != null) {
+            this.sections.putAll(sections);
+        }
     }
 
     public Map<ContactType, String> getContacts() {
