@@ -211,7 +211,7 @@ public class SqlStorage implements Storage {
                 return new SimpleTextSection(description);
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(description);
+                return new ListSection(description.split("\n"));
             default:
                 throw new StorageException("", "");
         }

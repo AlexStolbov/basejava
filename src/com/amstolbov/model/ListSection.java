@@ -1,6 +1,7 @@
 package com.amstolbov.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,8 +13,8 @@ public class ListSection extends AbstractSection {
 
     }
 
-    public ListSection(String parts) {
-        addFromString(parts);
+    public ListSection(String... parts) {
+        this.parts.addAll(Arrays.asList(parts));
     }
 
     public void addSectionPart(String sectionPart) {
@@ -27,13 +28,6 @@ public class ListSection extends AbstractSection {
     @Override
     public String toString() {
         return String.join("\n", parts);
-    }
-
-    public void addFromString(String oneString) {
-        String[] res = oneString.split("\n");
-        for (String s : res) {
-            addSectionPart(s);
-        }
     }
 
     @Override
