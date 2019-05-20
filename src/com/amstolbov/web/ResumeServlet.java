@@ -1,25 +1,27 @@
 package com.amstolbov.web;
 
-        import com.amstolbov.ResumeTestData;
-        import com.amstolbov.exception.NotExistStorageException;
-        import com.amstolbov.model.Resume;
-        import com.amstolbov.storage.ArrayStorage;
-        import com.amstolbov.storage.Storage;
+import com.amstolbov.ResumeTestData;
+import com.amstolbov.exception.NotExistStorageException;
+import com.amstolbov.model.Resume;
+import com.amstolbov.storage.ArrayStorage;
+import com.amstolbov.storage.Storage;
 
-        import javax.servlet.ServletException;
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
-        import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends javax.servlet.http.HttpServlet {
-    private final Storage resumes = new ArrayStorage();
+    private final Storage resumeStorage = new ArrayStorage();
 
     public ResumeServlet() {
-        resumes.save(ResumeTestData.getResume("UUID1",
+        resumeStorage.save(ResumeTestData.getResume("UUID1",
                 "full name 1",
                 ResumeTestData.ALL_CONTACTS,
                 ResumeTestData.WITHOUT_ORGANIZATION));
-        resumes.save(ResumeTestData.getResume("UUID2",
+        resumeStorage.save(ResumeTestData.getResume("UUID2",
                 "full name 2",
                 ResumeTestData.ALL_CONTACTS,
                 ResumeTestData.WITHOUT_ORGANIZATION));
@@ -39,28 +41,37 @@ public class ResumeServlet extends javax.servlet.http.HttpServlet {
         response.getWriter().write(getHtmlBody(request.getParameter("name")));
     }
 
-    private String getHtmlBody(String uuid) {
-        String resp = "Hello resumes";
-        if (uuid != null) {
+    private String getHtmlBody(String param) {
+        List<Resume> all;
+        if (param != null) {
             try {
-                resp = getResumeTable(resumes.get(uuid));
+                all = Arrays.asList(resumeStorage.get(param));
             } catch (NotExistStorageException e) {
-                resp = "Resumes " + uuid + (" not found");
+                return "Resumes " + param + (" not found");
             }
+        } else {
+            all = resumeStorage.getAllSorted();
         }
-        return resp;
+        return getResumeTable(all);
     }
 
-    private String getResumeTable(Resume resume) {
-        return "<table border=\" 1 \">" +
+    private String getResumeTable(List<Resume> all) {
+        String res = "<table border=\" 1 \">" +
                 "<tr>" +
-                "<td> UUID </td>" +
-                "<td> full name</td>" +
-                "</tr>" +
-                "<tr>" +
+                "<td> ID </td>" +
+                "<td> Full name</td>" +
+                "</tr>";
+        for (Resume resume : all) {
+            res = res + getRow(resume);
+        }
+        res = res +  "</table>";
+        return res;
+    }
+
+    private String getRow(Resume resume) {
+        return "<tr>" +
                 "<td> " + resume.getUuid() + " </td>" +
                 "<td> " + resume.getFullName() + " </td>" +
-                "</tr>" +
-                "</table>";
+                "</tr>";
     }
 }

@@ -40,9 +40,9 @@ public class SqlStorage implements Storage {
                             throw new NotExistStorageException(uuid);
                         }
                     }
-                    removeDependent(conn, "contact", uuid);
+                    removeDependent(conn, "DELETE FROM contact WHERE resume_uuid = ?", uuid);
                     saveContacts(resume, conn);
-                    removeDependent(conn, "resumesection", uuid);
+                    removeDependent(conn, "DELETE FROM resumesection WHERE resume_uuid = ?", uuid);
                     saveSections(resume, conn);
                     return null;
                 }
@@ -50,8 +50,8 @@ public class SqlStorage implements Storage {
         LOG.info("Update resume " + uuid);
     }
 
-    private void removeDependent(Connection conn, String tableName, String uuid) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tableName + " WHERE resume_uuid = ?")) {
+    private void removeDependent(Connection conn, String query, String uuid) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, uuid);
             ps.executeUpdate();
         }
@@ -129,13 +129,10 @@ public class SqlStorage implements Storage {
     }
 
     private List<Resume> getDate(String uuidFilter) {
-        String where = uuidFilter == null ? "" : " WHERE resume_uuid = ?";
-        String whereR = where.replaceAll("resume_", "");
         return sqlHelper.executeTransaction(conn -> {
                     Map<String, Map<ContactType, String>> contacts = new HashMap<>();
-                    try (PreparedStatement ps = conn.prepareStatement("" +
-                            "SELECT resume_uuid, type, value FROM contact " + where)) {
-                        if (!where.equals("")) {
+                    try (PreparedStatement ps = conn.prepareStatement(getQuery("contact", uuidFilter))) {
+                        if (uuidFilter != null) {
                             ps.setString(1, uuidFilter);
                         }
                         ResultSet rs = ps.executeQuery();
@@ -148,13 +145,15 @@ public class SqlStorage implements Storage {
                     }
                     Map<String, Map<SectionType, AbstractSection>> sections = new HashMap<>();
                     selectSection(conn,
-                            where,
                             uuidFilter,
                             sections);
                     List<Resume> result = new ArrayList<>();
-                    try (PreparedStatement ps = conn.prepareStatement("" +
-                            "SELECT uuid, full_name FROM resume " + whereR + " ORDER BY uuid")) {
-                        if (!whereR.equals("")) {
+                    String queryR = "SELECT uuid, full_name FROM resume ";
+                    if (uuidFilter != null) {
+                        queryR = queryR.concat(" WHERE uuid = ?");
+                    }
+                    try (PreparedStatement ps = conn.prepareStatement(queryR + " ORDER BY uuid")) {
+                        if (uuidFilter != null) {
                             ps.setString(1, uuidFilter);
                         }
                         ResultSet rs = ps.executeQuery();
@@ -171,10 +170,9 @@ public class SqlStorage implements Storage {
     }
 
     private void selectSection(Connection conn,
-                               String where,
                                String uuidFilter,
                                Map<String, Map<SectionType, AbstractSection>> sections) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("SELECT resume_uuid, type, description FROM resumesection " + where)) {
+        try (PreparedStatement ps = conn.prepareStatement(getQuery("resumesection", uuidFilter))) {
             if (uuidFilter != null) {
                 ps.setString(1, uuidFilter);
             }
@@ -186,6 +184,24 @@ public class SqlStorage implements Storage {
                 sections.get(uuid).put(sectionType, createSection(sectionType, rs.getString("description")));
             }
         }
+    }
+
+    private String getQuery(String tableName, String uuidFilter) {
+        String query;
+        switch (tableName) {
+            case "contact":
+                query = "SELECT resume_uuid, type, value FROM contact";
+                break;
+            case "resumesection":
+                query = "SELECT resume_uuid, type, description FROM resumesection";
+                break;
+            default:
+                throw new StorageException("unknown table name", tableName);
+        }
+        if (uuidFilter != null) {
+            query = query.concat(" WHERE resume_uuid = ?");
+        }
+        return query;
     }
 
     private AbstractSection createSection(SectionType sectionType, String description) {
