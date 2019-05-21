@@ -103,11 +103,37 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        List<Resume> resumes = getDate(uuid);
-        if (resumes.size() == 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return resumes.get(0);
+        return sqlHelper.executeTransaction(conn -> {
+                    Resume resume;
+                    try (PreparedStatement ps = conn.prepareStatement("SELECT full_name FROM resume WHERE uuid = ?")) {
+                        ps.setString(1, uuid);
+                        ResultSet rs = ps.executeQuery();
+                        if (!rs.next()) {
+                            throw new NotExistStorageException(uuid);
+                        }
+                        resume = new Resume(uuid, rs.getString("full_name"));
+                    }
+
+                    try (PreparedStatement ps = conn.prepareStatement("" +
+                            "SELECT resume_uuid, type, value FROM contact WHERE resume_uuid = ?")) {
+                        ps.setString(1, uuid);
+                        ResultSet rs = ps.executeQuery();
+                        while (rs.next()) {
+                            addContact(resume, rs);
+                        }
+                    }
+
+                    try (PreparedStatement ps = conn.prepareStatement("" +
+                            "SELECT resume_uuid, type, description FROM resumesection WHERE resume_uuid = ?")) {
+                        ps.setString(1, uuid);
+                        ResultSet rs = ps.executeQuery();
+                        while (rs.next()) {
+                            addSection(resume, rs);
+                        }
+                    }
+                    return resume;
+                }
+        );
     }
 
     @Override
@@ -125,83 +151,44 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return getDate(null);
-    }
-
-    private List<Resume> getDate(String uuidFilter) {
         return sqlHelper.executeTransaction(conn -> {
-                    Map<String, Map<ContactType, String>> contacts = new HashMap<>();
-                    try (PreparedStatement ps = conn.prepareStatement(getQuery("contact", uuidFilter))) {
-                        if (uuidFilter != null) {
-                            ps.setString(1, uuidFilter);
-                        }
+                    Map<String, Resume> result = new LinkedHashMap<>();
+                    try (PreparedStatement ps = conn.prepareStatement("" +
+                            "SELECT uuid, full_name FROM resume ORDER BY uuid")) {
                         ResultSet rs = ps.executeQuery();
                         while (rs.next()) {
-                            String uuid = rs.getString("resume_uuid").trim();
-                            Map<ContactType, String> ex = contacts.computeIfAbsent(uuid, key -> new EnumMap(ContactType.class));
-                            ex.put(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
-                            contacts.put(uuid, ex);
+                            String uuid = rs.getString("uuid").trim();
+                            result.put(uuid, new Resume(uuid, rs.getString("full_name")));
                         }
                     }
-                    Map<String, Map<SectionType, AbstractSection>> sections = new HashMap<>();
-                    selectSection(conn,
-                            uuidFilter,
-                            sections);
-                    List<Resume> result = new ArrayList<>();
-                    String queryR = "SELECT uuid, full_name FROM resume ";
-                    if (uuidFilter != null) {
-                        queryR = queryR.concat(" WHERE uuid = ?");
-                    }
-                    try (PreparedStatement ps = conn.prepareStatement(queryR + " ORDER BY uuid")) {
-                        if (uuidFilter != null) {
-                            ps.setString(1, uuidFilter);
-                        }
+                    try (PreparedStatement ps = conn.prepareStatement("" +
+                            "SELECT resume_uuid, type, value FROM contact")) {
                         ResultSet rs = ps.executeQuery();
                         while (rs.next()) {
-                            Resume newResume = new Resume(rs.getString("uuid").trim(), rs.getString("full_name"));
-                            newResume.addContacts(contacts.get(newResume.getUuid()));
-                            newResume.addSections(sections.get(newResume.getUuid()));
-                            result.add(newResume);
+                            addContact(result.get(rs.getString("resume_uuid").trim()), rs);
                         }
                     }
-                    return result;
+
+                    try (PreparedStatement ps = conn.prepareStatement("" +
+                            "SELECT resume_uuid, type, description FROM resumesection")) {
+                        ResultSet rs = ps.executeQuery();
+                        while (rs.next()) {
+                            addSection(result.get(rs.getString("resume_uuid").trim()), rs);
+                        }
+                    }
+                    return new ArrayList<>(result.values());
                 }
         );
     }
 
-    private void selectSection(Connection conn,
-                               String uuidFilter,
-                               Map<String, Map<SectionType, AbstractSection>> sections) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(getQuery("resumesection", uuidFilter))) {
-            if (uuidFilter != null) {
-                ps.setString(1, uuidFilter);
-            }
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String uuid = rs.getString("resume_uuid").trim();
-                sections.put(uuid, sections.computeIfAbsent(uuid, key -> new EnumMap(SectionType.class)));
-                SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-                sections.get(uuid).put(sectionType, createSection(sectionType, rs.getString("description")));
-            }
-        }
+    private void addContact(Resume r, ResultSet rs) throws SQLException {
+        r.addContact(ContactType.valueOf(rs.getString("type")),
+                rs.getString("value"));
     }
 
-    private String getQuery(String tableName, String uuidFilter) {
-        String query;
-        switch (tableName) {
-            case "contact":
-                query = "SELECT resume_uuid, type, value FROM contact";
-                break;
-            case "resumesection":
-                query = "SELECT resume_uuid, type, description FROM resumesection";
-                break;
-            default:
-                throw new StorageException("unknown table name", tableName);
-        }
-        if (uuidFilter != null) {
-            query = query.concat(" WHERE resume_uuid = ?");
-        }
-        return query;
+    private void addSection(Resume r, ResultSet rs) throws SQLException {
+        SectionType st = SectionType.valueOf(rs.getString("type"));
+        r.addSection(st, createSection(st, rs.getString("description")));
     }
 
     private AbstractSection createSection(SectionType sectionType, String description) {
