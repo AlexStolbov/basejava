@@ -14,6 +14,10 @@ public class SimpleTextSection extends AbstractSection {
         this.description = descr;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return description;
