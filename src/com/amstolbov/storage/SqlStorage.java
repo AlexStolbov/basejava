@@ -1,15 +1,21 @@
 package com.amstolbov.storage;
 
 import com.amstolbov.exception.NotExistStorageException;
-import com.amstolbov.exception.StorageException;
-import com.amstolbov.model.*;
+import com.amstolbov.model.AbstractSection;
+import com.amstolbov.model.ContactType;
+import com.amstolbov.model.Resume;
+import com.amstolbov.model.SectionType;
 import com.amstolbov.sql.SqlHelper;
+import com.amstolbov.util.JsonParser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class SqlStorage implements Storage {
@@ -94,7 +100,8 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> el : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, el.getKey().name());
-                ps.setString(3, el.getValue().toString());
+                AbstractSection section = el.getValue();
+                ps.setString(3, JsonParser.write(section, AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -188,20 +195,7 @@ public class SqlStorage implements Storage {
 
     private void addSection(Resume r, ResultSet rs) throws SQLException {
         SectionType st = SectionType.valueOf(rs.getString("type"));
-        r.addSection(st, createSection(st, rs.getString("description")));
-    }
-
-    private AbstractSection createSection(SectionType sectionType, String description) {
-        switch (sectionType) {
-            case OBJECTIVE:
-            case PERSONAL:
-                return new SimpleTextSection(description);
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                return new ListSection(description.split("\n"));
-            default:
-                throw new StorageException("", "");
-        }
+        r.addSection(st, JsonParser.read(rs.getString("description"), AbstractSection.class));
     }
 
     @Override
