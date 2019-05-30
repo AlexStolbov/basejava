@@ -34,17 +34,14 @@
                 </td>
             </tr>
             <c:choose>
-                <c:when test="${currentSectionType.name() == 'OBJECTIVE'}">
+                <c:when test="${currentSectionType.name() == 'OBJECTIVE' || currentSectionType.name() == 'PERSONAL'}">
                     <jsp:include page="sections/simplesection.jsp"/>
                 </c:when>
-                <c:when test="${currentSectionType.name() == 'PERSONAL'}">
-                    <jsp:include page="sections/simplesection.jsp"/>
-                </c:when>
-                <c:when test="${currentSectionType.name() == 'ACHIEVEMENT'}">
+                <c:when test="${currentSectionType.name() == 'ACHIEVEMENT' || currentSectionType.name() == 'QUALIFICATIONS'}">
                     <jsp:include page="sections/listsection.jsp"/>
                 </c:when>
-                <c:when test="${currentSectionType.name() == 'QUALIFICATIONS'}">
-                    <jsp:include page="sections/listsection.jsp"/>
+                <c:when test="${currentSectionType.name() == 'EXPERIENCE' || currentSectionType.name() == 'EDUCATION'}">
+                    <jsp:include page="sections/orgsection.jsp"/>
                 </c:when>
             </c:choose>
         </c:forEach>

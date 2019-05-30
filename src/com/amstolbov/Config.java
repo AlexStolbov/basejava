@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File (".\\config\\resume.properties");
+    private static final File PROPS = new File ("config\\resume.properties");
     private static final Config INSTANCE = new Config();
     private Properties props = new Properties();
     private Map<ParamType, String> params = new EnumMap<>(ParamType.class);

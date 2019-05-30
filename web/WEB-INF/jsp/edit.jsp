@@ -1,4 +1,5 @@
 <%@ page import="com.amstolbov.model.ContactType" %>
+<%@ page import="com.amstolbov.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -25,23 +26,20 @@
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
-        <c:forEach var="sectionEntry" items="${resume.sections}">
-            <c:set var="currentSectionType" scope="request" value="${sectionEntry.getKey()}"/>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <c:set var="currentSectionType" scope="request" value="${sectionType}"/>
             <jsp:useBean id="currentSectionType" scope="request" type="com.amstolbov.model.SectionType"/>
-            <c:set var="currentSection" scope="request" value="${sectionEntry.getValue()}"/>
+            <c:set var="currentSection" scope="request" value="${resume.getSections().get(sectionType)}"/>
             <dl>
                 <c:choose>
-                    <c:when test="${currentSectionType.name() == 'OBJECTIVE'}">
+                    <c:when test="${currentSectionType.name() == 'OBJECTIVE' || currentSectionType.name() == 'PERSONAL'}">
                         <jsp:include page="sectionsform/simplesectionform.jsp"/>
                     </c:when>
-                    <c:when test="${currentSectionType.name() == 'PERSONAL'}">
-                        <jsp:include page="sectionsform/simplesectionform.jsp"/>
-                    </c:when>
-                    <c:when test="${currentSectionType.name() == 'ACHIEVEMENT'}">
+                    <c:when test="${currentSectionType.name() == 'ACHIEVEMENT' || currentSectionType.name() == 'QUALIFICATIONS'}">
                         <jsp:include page="sectionsform/listsectionform.jsp"/>
                     </c:when>
-                    <c:when test="${currentSectionType.name() == 'QUALIFICATIONS'}">
-                        <jsp:include page="sectionsform/listsectionform.jsp"/>
+                    <c:when test="${currentSectionType.name() == 'EXPERIENCE' || currentSectionType.name() == 'EDUCATION'}">
+                        <jsp:include page="sectionsform/orgsectionform.jsp"/>
                     </c:when>
                 </c:choose>
             </dl>

@@ -23,7 +23,7 @@ public class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    private static final SectionType[] fillSections = ResumeTestData.WITHOUT_ORGANIZATION;
+    private static final SectionType[] fillSections = ResumeTestData.ALL_SECTIONS;
 
     private static final Resume RESUME_1 = ResumeTestData.getResume(UUID_1,
             "full name 1",
